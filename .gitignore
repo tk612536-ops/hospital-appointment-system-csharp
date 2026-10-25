@@ -1,0 +1,97 @@
+# .NET build, package, publish and test output
+[Bb]in/
+[Oo]bj/
+[Aa]rtifacts/
+[Pp]ublish/
+[Tt]est[Rr]esults/
+[Pp]ackages/
+*.nupkg
+*.snupkg
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage*.xml
+coverage*.json
+*.binlog
+
+# IDE and per-user workspace state
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.DotSettings.user
+
+# Local SQLite/H2 database files and journals; never commit demo databases
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db3
+*.db3-*
+*.mv.db
+*.trace.db
+data/
+App_Data/
+
+# Credentials, environment files, certificates and local configuration
+.env
+.env.*
+!.env.example
+!.env.template
+secrets.json
+secrets.*.json
+appsettings.Local.json
+appsettings.*.Local.json
+appsettings.Secrets.json
+appsettings.*.Secrets.json
+appsettings.Development.json
+Properties/launchSettings.json
+*.pfx
+*.p12
+*.pem
+*.key
+*.snk
+*.publishsettings
+*.pubxml
+*.pubxml.user
+.credentials/
+.secrets/
+.aspnet/
+.aws/
+.azure/
+.ssh/
+
+# Logs, temporary files, local caches and backups
+*.log
+logs/
+tmp/
+temp/
+.cache/
+.nuget/
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+__pycache__/
+*.pyc
+node_modules/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Keep source migrations, tool manifests and package lock files tracked.
+# Shared appsettings.json must contain safe defaults only; use environment
+# variables/user-secrets for private values, never a committed real secret.
