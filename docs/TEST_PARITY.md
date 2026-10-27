@@ -1,6 +1,6 @@
 # Java → C# test parity and verification plan
 
-Status: Stage 0 planning only. **No C# test project, test implementation or execution exists.** Proposed test names below are planning identifiers, not links to existing C# code.
+Status: Stages 1–3 implemented and verified on 26 October 2026. **191 C# tests passed (31 domain, 26 application, 134 integration), zero failures/skips.** The original 113 Stage 1/2 cases remain, with obsolete homepage/route boundary assertions updated; 78 new cases cover Stage 3. Verified rows name actual tests. This is not a claim that 118 unchanged Java tests ran in C# or that the final parity audit is complete.
 
 ## Reference evidence and honest baseline
 
@@ -19,7 +19,7 @@ Read-only source: `C:\Users\muhammed\Desktop\hospital-appointment-system\src\tes
 | ManagementIntegrationTest | 28 | Management/HTTP/SQLite integration |
 | AuthenticationIntegrationTest | 13 | Real Identity/MVC integration |
 | NonDemoProfileIntegrationTest | 2 | Non-demo host/time configuration integration |
-| **Total** | **118** | **All C# cases are not implemented / not run** |
+| **Total** | **118** | **See per-row implemented/adapted coverage and the explicit partial final-review row** |
 
 Retain each behavioral scenario, including every parameterized row. Do not chase an identical test count: one scenario can require multiple C# tests or a provider-specific replacement. Completion means the matrix is resolved with actual C# file/test identifiers, executed evidence and reasons for changes. Do not mark a scenario covered because its proposed name appears here.
 
@@ -56,179 +56,184 @@ Each stage records relevant build/test commands, date, versions, outcomes/counts
 
 ## Per-execution migration matrix
 
-The following rows inventory each execution in the existing Java XML reports, including indexed parameter cases. Preserve source row values from the Java test source when implementing; index numbers are report locators, not independent requirement IDs. All target tests remain proposals. Class prefixes organize intended coverage; individual cases may move between the approved test projects when their boundary requires it.
+The following rows inventory each execution in the existing Java XML reports, including indexed parameter cases. Preserve source row values from the Java test source when implementing; index numbers are report locators, not independent requirement IDs. Unverified targets remain proposals. Verified target names refer to classes in the current test projects; parameterized Java cases can map to one C# theory or a combined test without implying identical counts.
 
 ### UserAccountTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J001 | `rejectsAnUnencodedPassword` | `IdentityAccountTests.IdentityCreatesAndVerifiesHashedPasswords` | Replaced | Not implemented / not run |
-| J002 | `rolesAreComposedAndDefensivelyCopied` | `IdentityAccountTests.RolesAreComposedAndDefensivelyCopied` | Adapted | Not implemented / not run |
-| J003 | `rejectsNullRoleElements` | `IdentityAccountTests.RejectsNullRoleElements` | Adapted | Not implemented / not run |
-| J004 | `rejectsAccountsWithoutRoles` | `IdentityAccountTests.RejectsAccountsWithoutRoles` | Adapted | Not implemented / not run |
-| J005 | `rejectsBlankUsername(String)[1]` | `IdentityAccountTests.RejectsBlankUsername_Case1` | Adapted | Not implemented / not run |
-| J006 | `rejectsBlankUsername(String)[2]` | `IdentityAccountTests.RejectsBlankUsername_Case2` | Adapted | Not implemented / not run |
-| J007 | `rejectsBlankUsername(String)[3]` | `IdentityAccountTests.RejectsBlankUsername_Case3` | Adapted | Not implemented / not run |
-| J008 | `rejectsBlankUsername(String)[4]` | `IdentityAccountTests.RejectsBlankUsername_Case4` | Adapted | Not implemented / not run |
-| J009 | `normalizationCannotExpandAUsernamePastItsDatabaseLimit` | `IdentityAccountTests.IdentityNormalizationAndUsernameBoundsAreSafe` | Replaced | Not implemented / not run |
-| J010 | `rejectsAnOverlongUsernameBeforePersistence` | `IdentityAccountTests.RejectsAnOverlongUsernameBeforePersistence` | Adapted | Not implemented / not run |
-| J011 | `normalizesLoginIdentityWithoutChangingDisplayName` | `IdentityAccountTests.NormalizesLoginIdentityWithoutChangingDisplayName` | Adapted | Not implemented / not run |
+| J001 | `rejectsAnUnencodedPassword` | `FoundationIntegrationTests.PasswordsAreHashedAndSeederNeverReplacesStoredCredentials` | Replaced | Stage 1 verified (adapted where required) |
+| J002 | `rolesAreComposedAndDefensivelyCopied` | `AccountProfileTests.RolesAreComposedAndDefensivelyCopied` | Adapted | Stage 1 verified (adapted where required) |
+| J003 | `rejectsNullRoleElements` | `AccountProfileTests.EmptyAndUnknownRolesAreRejected` | Replaced | Stage 1 verified; non-nullable enum replaces nullable role elements |
+| J004 | `rejectsAccountsWithoutRoles` | `FoundationIntegrationTests.AnAccountWithoutAssignedRolesCannotLogin` | Adapted | Stage 1 verified (adapted where required) |
+| J005 | `rejectsBlankUsername(String)[1]` | `AccountServiceTests.InvalidLoginShapeNeverReachesIdentity` | Adapted | Stage 1 verified (adapted where required) |
+| J006 | `rejectsBlankUsername(String)[2]` | `AccountServiceTests.InvalidLoginShapeNeverReachesIdentity` | Adapted | Stage 1 verified (adapted where required) |
+| J007 | `rejectsBlankUsername(String)[3]` | `AccountServiceTests.InvalidLoginShapeNeverReachesIdentity` | Adapted | Stage 1 verified (adapted where required) |
+| J008 | `rejectsBlankUsername(String)[4]` | `AccountServiceTests.InvalidLoginShapeNeverReachesIdentity` | Adapted | Stage 1 verified (adapted where required) |
+| J009 | `normalizationCannotExpandAUsernamePastItsDatabaseLimit` | `FoundationIntegrationTests.WeakPasswordsAndOversizedUsernamesAreRejected` | Replaced | Stage 1 verified (adapted where required) |
+| J010 | `rejectsAnOverlongUsernameBeforePersistence` | `FoundationIntegrationTests.WeakPasswordsAndOversizedUsernamesAreRejected` | Adapted | Stage 1 verified (adapted where required) |
+| J011 | `normalizesLoginIdentityWithoutChangingDisplayName` | `FoundationIntegrationTests.LoginAcceptsTrimmedCaseInsensitiveUsernameAndRejectsExternalReturnUrl` | Adapted | Stage 1 verified (adapted where required) |
 
 ### AppointmentDomainTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J012 | `pendingApprovalAndRejectionProtectTheirTransitionsAndAudit` | `AppointmentDomainTests.PendingApprovalAndRejectionProtectTheirTransitionsAndAudit` | Equivalent | Not implemented / not run |
-| J013 | `onlyManagersCanReceiveFacilityGrants` | `AppointmentDomainTests.OnlyManagerRoleCanCreateOrExerciseFacilityGrants` | Adapted | Not implemented / not run |
-| J014 | `invalidDecisionInputCannotPartiallyChangeAuditState` | `AppointmentDomainTests.InvalidDecisionInputCannotPartiallyChangeAuditState` | Equivalent | Not implemented / not run |
-| J015 | `offeringCannotJoinDifferentEmployingFacilities` | `AppointmentDomainTests.OfferingCannotJoinDifferentEmployingFacilities` | Equivalent | Not implemented / not run |
-| J016 | `differentStaffTypesHonorTheSameContractWithoutTypeSwitches` | `AppointmentDomainTests.DifferentStaffTypesHonorTheSameContractWithoutTypeSwitches` | Equivalent | Not implemented / not run |
-| J017 | `appointmentMustMatchServerSideDuration` | `AppointmentDomainTests.AppointmentMustMatchServerSideDuration` | Equivalent | Not implemented / not run |
-| J018 | `catalogChangesCannotRewriteBookedSnapshots` | `AppointmentDomainTests.CatalogChangesCannotRewriteBookedSnapshots` | Equivalent | Not implemented / not run |
-| J019 | `rejectsInvalidServiceDurations(int)[1]` | `AppointmentDomainTests.RejectsInvalidServiceDurations_Case1` | Equivalent | Not implemented / not run |
-| J020 | `rejectsInvalidServiceDurations(int)[2]` | `AppointmentDomainTests.RejectsInvalidServiceDurations_Case2` | Equivalent | Not implemented / not run |
-| J021 | `rejectsInvalidServiceDurations(int)[3]` | `AppointmentDomainTests.RejectsInvalidServiceDurations_Case3` | Equivalent | Not implemented / not run |
-| J022 | `rejectsNegativeOrFractionalCentFees` | `AppointmentDomainTests.RejectsNegativeOrFractionalCentFees` | Equivalent | Not implemented / not run |
+| J012 | `pendingApprovalAndRejectionProtectTheirTransitionsAndAudit` | `BookingDomainTests.DecisionsAreOneWayAndInvalidAuditInputIsAtomic` | Equivalent | Stage 2 verified (adapted where required) |
+| J013 | `onlyManagersCanReceiveFacilityGrants` | `ManagementIntegrationTests.EveryManagementServiceEnforcesRoleAndFacilityGrantDirectly + FacilityCreationGrantsOwnershipAndSupportsSingleAndMultipleBranches` | Adapted | Stage 3 verified (adapted where required) |
+| J014 | `invalidDecisionInputCannotPartiallyChangeAuditState` | `BookingDomainTests.DecisionsAreOneWayAndInvalidAuditInputIsAtomic` | Equivalent | Stage 2 verified (adapted where required) |
+| J015 | `offeringCannotJoinDifferentEmployingFacilities` | `BookingDomainTests.OfferingAndAvailabilityCannotCrossEmployingFacilities` | Equivalent | Stage 2 verified (adapted where required) |
+| J016 | `differentStaffTypesHonorTheSameContractWithoutTypeSwitches` | `BookingDomainTests.BothStaffTypesImplementTheRealSharedProfessionalContract` | Equivalent | Stage 2 verified (adapted where required) |
+| J017 | `appointmentMustMatchServerSideDuration` | `BookingDomainTests.StateMethodsDoNotReassignOwnershipAndDeactivationRetainsHistory` | Equivalent | Stage 2 verified (adapted where required) |
+| J018 | `catalogChangesCannotRewriteBookedSnapshots` | `BookingDomainTests.BookedSnapshotsSurviveCatalogAndEmployeeEdits` | Equivalent | Stage 2 verified (adapted where required) |
+| J019 | `rejectsInvalidServiceDurations(int)[1]` | `BookingDomainTests.InvalidServiceDurationsLeaveTermsUnchanged` | Equivalent | Stage 2 verified (adapted where required) |
+| J020 | `rejectsInvalidServiceDurations(int)[2]` | `BookingDomainTests.InvalidServiceDurationsLeaveTermsUnchanged` | Equivalent | Stage 2 verified (adapted where required) |
+| J021 | `rejectsInvalidServiceDurations(int)[3]` | `BookingDomainTests.InvalidServiceDurationsLeaveTermsUnchanged` | Equivalent | Stage 2 verified (adapted where required) |
+| J022 | `rejectsNegativeOrFractionalCentFees` | `BookingDomainTests.FeesRequireExactNonnegativeMinorUnits` | Equivalent | Stage 2 verified (adapted where required) |
 
 ### ConfigurationDomainTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J023 | `professionalEditsRemainPolymorphicAndDoNotChangeEmployeeType` | `ConfigurationDomainTests.ProfessionalEditsRemainPolymorphicAndDoNotChangeEmployeeType` | Equivalent | Not implemented / not run |
-| J024 | `invalidFacilityTypeCannotPartiallyRenameIt` | `ConfigurationDomainTests.InvalidFacilityTypeCannotPartiallyRenameIt` | Equivalent | Not implemented / not run |
-| J025 | `renamingProtectsOwnershipAndValidatesState` | `ConfigurationDomainTests.RenamingProtectsOwnershipAndValidatesState` | Equivalent | Not implemented / not run |
-| J026 | `reschedulingPreservesResourceLinksAndRejectsOvernightIntervals` | `ConfigurationDomainTests.ReschedulingPreservesResourceLinksAndRejectsOvernightIntervals` | Equivalent | Not implemented / not run |
-| J027 | `activeStatesChangeEligibilityWithoutRemovingAssociations` | `ConfigurationDomainTests.ActiveStatesChangeEligibilityWithoutRemovingAssociations` | Equivalent | Not implemented / not run |
+| J023 | `professionalEditsRemainPolymorphicAndDoNotChangeEmployeeType` | `ManagementIntegrationTests.DoctorAndHealthcareStaffRemainPolymorphicAndOfferingAssignmentIsIdempotent` | Adapted | Stage 3 verified (adapted where required) |
+| J024 | `invalidFacilityTypeCannotPartiallyRenameIt` | `BookingDomainTests.StateMethodsDoNotReassignOwnershipAndDeactivationRetainsHistory` | Equivalent | Stage 2 verified (adapted where required) |
+| J025 | `renamingProtectsOwnershipAndValidatesState` | `ManagementDomainTests.InvalidNamedEditsLeaveNamesAndOwnershipUnchanged + ManagementIntegrationTests.ForgedChildResourcesAreRejectedEvenWhenManagerOwnsTheUrlFacility` | Equivalent | Stage 3 verified (adapted where required) |
+| J026 | `reschedulingPreservesResourceLinksAndRejectsOvernightIntervals` | `ManagementDomainTests.ReschedulingPreservesTheEmployeeAndBranchAndRejectsNullAtomically + ManagementScheduleTests.NonPositiveOrOvernightIntervalsAreRejected` | Adapted | Stage 3 verified (adapted where required) |
+| J027 | `activeStatesChangeEligibilityWithoutRemovingAssociations` | `BookingDomainTests.StateMethodsDoNotReassignOwnershipAndDeactivationRetainsHistory` | Equivalent | Stage 2 verified (adapted where required) |
 
 ### TimeIntervalTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J028 | `rejectsZeroAndNegativeLength` | `TimeIntervalTests.RejectsZeroAndNegativeLength` | Equivalent | Not implemented / not run |
-| J029 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[1]` | `TimeIntervalTests.OverlapIsSymmetricAndEndExclusive_Case1` | Equivalent | Not implemented / not run |
-| J030 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[2]` | `TimeIntervalTests.OverlapIsSymmetricAndEndExclusive_Case2` | Equivalent | Not implemented / not run |
-| J031 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[3]` | `TimeIntervalTests.OverlapIsSymmetricAndEndExclusive_Case3` | Equivalent | Not implemented / not run |
-| J032 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[4]` | `TimeIntervalTests.OverlapIsSymmetricAndEndExclusive_Case4` | Equivalent | Not implemented / not run |
-| J033 | `continuousCoverageMergesAdjacentButNeverBridgesGaps` | `TimeIntervalTests.ContinuousCoverageMergesAdjacentButNeverBridgesGaps` | Equivalent | Not implemented / not run |
-| J034 | `containmentRequiresTheWholeIntervalIncludingTheEndBoundary` | `TimeIntervalTests.ContainmentRequiresTheWholeIntervalIncludingTheEndBoundary` | Equivalent | Not implemented / not run |
+| J028 | `rejectsZeroAndNegativeLength` | `BookingDomainTests.InvalidIntervalsAndNonUtcInstantsAreRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J029 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[1]` | `BookingDomainTests.OverlapIsSymmetricAndEndExclusive` | Equivalent | Stage 2 verified (adapted where required) |
+| J030 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[2]` | `BookingDomainTests.OverlapIsSymmetricAndEndExclusive` | Equivalent | Stage 2 verified (adapted where required) |
+| J031 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[3]` | `BookingDomainTests.OverlapIsSymmetricAndEndExclusive` | Equivalent | Stage 2 verified (adapted where required) |
+| J032 | `overlapIsSymmetricAndEndExclusive(String, String, String, String, boolean)[4]` | `BookingDomainTests.OverlapIsSymmetricAndEndExclusive` | Equivalent | Stage 2 verified (adapted where required) |
+| J033 | `continuousCoverageMergesAdjacentButNeverBridgesGaps` | `BookingDomainTests.CoverageMergesAdjacencyButNeverBridgesPositiveGaps` | Equivalent | Stage 2 verified (adapted where required) |
+| J034 | `containmentRequiresTheWholeIntervalIncludingTheEndBoundary` | `BookingDomainTests.CoverageMergesAdjacencyButNeverBridgesPositiveGaps` | Equivalent | Stage 2 verified (adapted where required) |
 
 ### UserAccountRepositoryTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J035 | `databaseRejectsDuplicateNormalizedUsernames` | `IdentityPersistenceTests.DatabaseRejectsDuplicateNormalizedUsernames` | Adapted | Not implemented / not run |
-| J036 | `persistsAndReloadsAccountWithMultipleRoles` | `IdentityPersistenceTests.PersistsAndReloadsAccountWithMultipleRoles` | Adapted | Not implemented / not run |
+| J035 | `databaseRejectsDuplicateNormalizedUsernames` | `FoundationIntegrationTests.DatabaseAlsoRejectsDuplicateNormalizedUsername` | Adapted | Stage 1 verified (adapted where required) |
+| J036 | `persistsAndReloadsAccountWithMultipleRoles` | `FoundationIntegrationTests.RolesComposeAndNormalizedUsernamesRemainUnique` | Adapted | Stage 1 verified (adapted where required) |
 
 ### BookingIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J037 | `simultaneousBackToBackRequestsBothCommit` | `BookingIntegrationTests.SimultaneousBackToBackRequestsBothCommit` | Adapted | Not implemented / not run |
-| J038 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[1]` | `BookingIntegrationTests.BranchLunchGapAndClosingBoundaryRejectPartialCoverage_Case1` | Equivalent | Not implemented / not run |
-| J039 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[2]` | `BookingIntegrationTests.BranchLunchGapAndClosingBoundaryRejectPartialCoverage_Case2` | Equivalent | Not implemented / not run |
-| J040 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[3]` | `BookingIntegrationTests.BranchLunchGapAndClosingBoundaryRejectPartialCoverage_Case3` | Equivalent | Not implemented / not run |
-| J041 | `staleCatalogVersionRejectedAndExistingSnapshotsRemainStable` | `BookingIntegrationTests.StaleCatalogVersionRejectedAndExistingSnapshotsRemainStable` | Equivalent | Not implemented / not run |
-| J042 | `candidatesUseTheSameFullDurationAndPatientConflictRules` | `BookingIntegrationTests.CandidatesUseTheSameFullDurationAndPatientConflictRules` | Equivalent | Not implemented / not run |
-| J043 | `databaseLockTimeoutRollsBackWithoutPartialReservation` | `BookingIntegrationTests.SqliteBusyTimeoutRollsBackWithoutPartialReservation` | Replaced | Not implemented / not run |
-| J044 | `adjacentAvailabilityWindowsJoinButPositiveGapsDoNot` | `BookingIntegrationTests.AdjacentAvailabilityWindowsJoinButPositiveGapsDoNot` | Equivalent | Not implemented / not run |
-| J045 | `patientsStaffAndManagersAreRestrictedByObjectOwnership` | `BookingIntegrationTests.PatientsStaffAndManagersAreRestrictedByObjectOwnership` | Equivalent | Not implemented / not run |
-| J046 | `sameEmployeeConflictQueryNeverFiltersByBranch` | `BookingIntegrationTests.SameEmployeeConflictQueryNeverFiltersByBranch` | Equivalent | Not implemented / not run |
-| J047 | `simultaneousSamePatientDifferentStaffAndBranchesHaveOneWinner` | `BookingIntegrationTests.SimultaneousSamePatientDifferentStaffAndBranchesHaveOneWinner` | Adapted | Not implemented / not run |
-| J048 | `wholeDurationEndingAtAvailabilityBoundaryIsAcceptedAndPersisted` | `BookingIntegrationTests.WholeDurationEndingAtAvailabilityBoundaryIsAcceptedAndPersisted` | Equivalent | Not implemented / not run |
-| J049 | `samePatientCannotOverlapDifferentStaffOrBranches` | `BookingIntegrationTests.SamePatientCannotOverlapDifferentStaffOrBranches` | Equivalent | Not implemented / not run |
-| J050 | `pendingAndApprovedBlockButRejectedReleasesTime` | `BookingIntegrationTests.PendingAndApprovedBlockButRejectedReleasesTime` | Adapted | Not implemented / not run |
-| J051 | `backToBackAppointmentsCanBothReserve` | `BookingIntegrationTests.BackToBackAppointmentsCanBothReserve` | Equivalent | Not implemented / not run |
-| J052 | `malformedOrConflictingBookingProducesFeedbackWithoutSaving` | `BookingIntegrationTests.MalformedOrConflictingBookingProducesFeedbackWithoutSaving` | Adapted | Not implemented / not run |
-| J053 | `simultaneousSameStaffRequestsWithNoExistingAppointmentsHaveOneWinner` | `BookingIntegrationTests.SimultaneousSameStaffRequestsWithNoExistingAppointmentsHaveOneWinner` | Adapted | Not implemented / not run |
-| J054 | `pastOffGridAndSecondPrecisionStartsAreRejected` | `BookingIntegrationTests.PastOffGridAndSecondPrecisionStartsAreRejected` | Equivalent | Not implemented / not run |
-| J055 | `healthcareStaffBooksThroughTheSharedFlowAndJoinedMapping` | `BookingIntegrationTests.HealthcareStaffBooksThroughSharedFlowAndTphMapping` | Adapted | Not implemented / not run |
-| J056 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[1]` | `BookingIntegrationTests.FreeStartIsInsufficientWithoutWholeDurationCoverage_Case1` | Equivalent | Not implemented / not run |
-| J057 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[2]` | `BookingIntegrationTests.FreeStartIsInsufficientWithoutWholeDurationCoverage_Case2` | Equivalent | Not implemented / not run |
-| J058 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[3]` | `BookingIntegrationTests.FreeStartIsInsufficientWithoutWholeDurationCoverage_Case3` | Equivalent | Not implemented / not run |
-| J059 | `simultaneousDecisionsCanTransitionPendingOnlyOnce` | `BookingIntegrationTests.SimultaneousDecisionsCanTransitionPendingOnlyOnce` | Adapted | Not implemented / not run |
-| J060 | `joinedStaffMappingActuallyLocksTheSharedStaffTable` | `BookingIntegrationTests.ImmediateWriterTransactionPrecedesMutableReads` | Replaced | Not implemented / not run |
-| J061 | `renderedBookingListDetailsAndDecisionFormsWorkWithoutTrustedClientTerms` | `BookingIntegrationTests.RenderedBookingListDetailsAndDecisionFormsWorkWithoutTrustedClientTerms` | Adapted | Not implemented / not run |
-| J062 | `workerListsRespectAssignedEmployeeAndFacilityGrants` | `BookingIntegrationTests.WorkerListsRespectAssignedEmployeeAndFacilityGrants` | Equivalent | Not implemented / not run |
-| J063 | `simultaneousCrossBranchStaffRequestsHaveOneWinner` | `BookingIntegrationTests.SimultaneousCrossBranchStaffRequestsHaveOneWinner` | Adapted | Not implemented / not run |
+| J037 | `simultaneousBackToBackRequestsBothCommit` | `BookingConcurrencyTests.ConcurrentAdjacentBookingsBothCommit` | Adapted | Stage 2 verified (adapted where required) |
+| J038 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[1]` | `BookingIntegrationTests.BranchLunchAndClosingGapsRejectTheFullInterval` | Equivalent | Stage 2 verified (adapted where required) |
+| J039 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[2]` | `BookingIntegrationTests.BranchLunchAndClosingGapsRejectTheFullInterval` | Equivalent | Stage 2 verified (adapted where required) |
+| J040 | `branchLunchGapAndClosingBoundaryRejectPartialCoverage(String)[3]` | `BookingIntegrationTests.BranchLunchAndClosingGapsRejectTheFullInterval` | Equivalent | Stage 2 verified (adapted where required) |
+| J041 | `staleCatalogVersionRejectedAndExistingSnapshotsRemainStable` | `BookingIntegrationTests.SnapshotTermsAndNamesSurviveEditsAndStaleFormIsRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J042 | `candidatesUseTheSameFullDurationAndPatientConflictRules` | `BookingIntegrationTests.CandidatesReuseFullDurationAndPatientConflictRules` | Equivalent | Stage 2 verified (adapted where required) |
+| J043 | `databaseLockTimeoutRollsBackWithoutPartialReservation` | `BookingConcurrencyTests.BusyTimeoutIsBoundedLeavesNoReservationAndAllowsFreshRetry` | Replaced | Stage 2 verified (adapted where required) |
+| J044 | `adjacentAvailabilityWindowsJoinButPositiveGapsDoNot` | `BookingIntegrationTests.AdjacentWindowsMergeAndPositiveAvailabilityGapsDoNot` | Equivalent | Stage 2 verified (adapted where required) |
+| J045 | `patientsStaffAndManagersAreRestrictedByObjectOwnership` | `BookingIntegrationTests.OwnershipFacilityGrantsAndDecisionTransitionsAreEnforcedInServices` | Equivalent | Stage 2 verified (adapted where required) |
+| J046 | `sameEmployeeConflictQueryNeverFiltersByBranch` | `BookingConcurrencyTests.SameStaffAcrossBranchesIsOneGlobalResource` | Equivalent | Stage 2 verified (adapted where required) |
+| J047 | `simultaneousSamePatientDifferentStaffAndBranchesHaveOneWinner` | `BookingConcurrencyTests.ConflictingIndependentBookingsHaveExactlyOneWinner` | Adapted | Stage 2 verified (adapted where required) |
+| J048 | `wholeDurationEndingAtAvailabilityBoundaryIsAcceptedAndPersisted` | `BookingIntegrationTests.EntireDurationAtBoundaryBooksWithExactTermsAndUtcPersistence` | Equivalent | Stage 2 verified (adapted where required) |
+| J049 | `samePatientCannotOverlapDifferentStaffOrBranches` | `BookingIntegrationTests.PatientConflictsAcrossEmployeesAndBranchesAndAdjacencyWorks` | Equivalent | Stage 2 verified (adapted where required) |
+| J050 | `pendingAndApprovedBlockButRejectedReleasesTime` | `BookingIntegrationTests.PendingApprovedReserveAndRejectedReleases` | Adapted | Stage 2 verified (adapted where required) |
+| J051 | `backToBackAppointmentsCanBothReserve` | `BookingIntegrationTests.PatientConflictsAcrossEmployeesAndBranchesAndAdjacencyWorks` | Equivalent | Stage 2 verified (adapted where required) |
+| J052 | `malformedOrConflictingBookingProducesFeedbackWithoutSaving` | `BookingIntegrationTests.EmptyCatalogAndMalformedPostsRemainUsableAndSafe + BookingPersistenceTests.BusyHttpResponseIs503AndPreservesSelectionWithoutSaving` | Adapted | Stage 2 verified (adapted where required) |
+| J053 | `simultaneousSameStaffRequestsWithNoExistingAppointmentsHaveOneWinner` | `BookingConcurrencyTests.ConflictingIndependentBookingsHaveExactlyOneWinner` | Adapted | Stage 2 verified (adapted where required) |
+| J054 | `pastOffGridAndSecondPrecisionStartsAreRejected` | `AvailabilityRulesTests.CurrentInstantAndPastStartsAreRejected + OffGridAndSubMinuteStartsAreRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J055 | `healthcareStaffBooksThroughTheSharedFlowAndJoinedMapping` | `BookingIntegrationTests.HealthcareStaffAndTphMappingUseTheSameBookingOperation` | Adapted | Stage 2 verified (adapted where required) |
+| J056 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[1]` | `BookingIntegrationTests.PartialDurationWrongBranchHoursAndOffGridAreRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J057 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[2]` | `BookingIntegrationTests.PartialDurationWrongBranchHoursAndOffGridAreRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J058 | `freeStartIsInsufficientWithoutWholeDurationCoverage(String, String)[3]` | `BookingIntegrationTests.PartialDurationWrongBranchHoursAndOffGridAreRejected` | Equivalent | Stage 2 verified (adapted where required) |
+| J059 | `simultaneousDecisionsCanTransitionPendingOnlyOnce` | `BookingConcurrencyTests.CompetingApprovalAndRejectionTransitionExactlyOnce` | Adapted | Stage 2 verified (adapted where required) |
+| J060 | `joinedStaffMappingActuallyLocksTheSharedStaffTable` | `BookingConcurrencyTests.ImmediateScopeReservesWriterBeforeAnyDomainReadAndEnlistsEf` | Replaced | Stage 2 verified (adapted where required) |
+| J061 | `renderedBookingListDetailsAndDecisionFormsWorkWithoutTrustedClientTerms` | `BookingIntegrationTests.RealPatientBookingStaffApprovalAndPatientConfirmationIgnoreForgedTerms` | Adapted | Stage 2 verified (adapted where required) |
+| J062 | `workerListsRespectAssignedEmployeeAndFacilityGrants` | `BookingIntegrationTests.OwnershipFacilityGrantsAndDecisionTransitionsAreEnforcedInServices` | Equivalent | Stage 2 verified (adapted where required) |
+| J063 | `simultaneousCrossBranchStaffRequestsHaveOneWinner` | `BookingConcurrencyTests.SameStaffAcrossBranchesIsOneGlobalResource` | Adapted | Stage 2 verified (adapted where required) |
 
 ### DemoDataIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J064 | `demoAppointmentsUseFutureDatesAndSeedingNeverMovesOrDuplicatesThem` | `DemoDataIntegrationTests.DemoAppointmentsUseFutureDatesAndSeedingNeverMovesOrDuplicatesThem` | Equivalent | Not implemented / not run |
-| J065 | `bothPersistedSubtypesWorkThroughTheAbstractRepositoryContract` | `DemoDataIntegrationTests.BothPersistedSubtypesWorkThroughTheAbstractRepositoryContract` | Equivalent | Not implemented / not run |
+| J064 | `demoAppointmentsUseFutureDatesAndSeedingNeverMovesOrDuplicatesThem` | `BookingPersistenceTests.RenamedSeedAndDecidedAppointmentSurviveRestartWithoutMovingDates` | Equivalent | Stage 2 verified (adapted where required) |
+| J065 | `bothPersistedSubtypesWorkThroughTheAbstractRepositoryContract` | `BookingIntegrationTests.HealthcareStaffAndTphMappingUseTheSameBookingOperation` | Equivalent | Stage 2 verified (adapted where required) |
 
 ### FinalReviewIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J066 | `unauthorizedConfigurationIsDeniedBeforeAnyWriteLock` | `FinalReviewIntegrationTests.UnauthorizedConfigurationDeniedBeforeWriterAcquisition` | Adapted | Not implemented / not run |
-| J067 | `anEmptyActiveCatalogIsAUsablePatientPage` | `FinalReviewIntegrationTests.AnEmptyActiveCatalogIsAUsablePatientPage` | Adapted | Not implemented / not run |
-| J068 | `rejectedBookingPreservesEmployeeServiceAndDateSelection` | `FinalReviewIntegrationTests.RejectedBookingPreservesEmployeeServiceAndDateSelection` | Adapted | Not implemented / not run |
-| J069 | `subtypeEditorCannotChangeAHealthcareEmployeeIntoADoctor` | `FinalReviewIntegrationTests.SubtypeEditorCannotChangeAHealthcareEmployeeIntoADoctor` | Equivalent | Not implemented / not run |
-| J070 | `renamedSeedFacilityDoesNotTriggerDuplicateInitialization` | `FinalReviewIntegrationTests.RenamedSeedFacilityDoesNotTriggerDuplicateInitialization` | Equivalent | Not implemented / not run |
-| J071 | `managerInputIsEscapedRatherThanExecutedInTheView` | `FinalReviewIntegrationTests.ManagerInputIsEscapedRatherThanExecutedInTheView` | Adapted | Not implemented / not run |
-| J072 | `overlongAndExpandingLoginNamesFailAsNormalInvalidCredentials` | `FinalReviewIntegrationTests.MalformedOrOverlongIdentityLoginFailsNormally` | Adapted | Not implemented / not run |
-| J073 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[1]` | `FinalReviewIntegrationTests.RolePagesProvideKeyboardLandmarksAndLocalAssets_Case1` | Adapted | Not implemented / not run |
-| J074 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[2]` | `FinalReviewIntegrationTests.RolePagesProvideKeyboardLandmarksAndLocalAssets_Case2` | Adapted | Not implemented / not run |
-| J075 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[3]` | `FinalReviewIntegrationTests.RolePagesProvideKeyboardLandmarksAndLocalAssets_Case3` | Adapted | Not implemented / not run |
+| J066 | `unauthorizedConfigurationIsDeniedBeforeAnyWriteLock` | `ManagementScopeTests.UnauthorizedCommandsDoNotAcquireTheDatabaseWriter` | Adapted | Stage 3 verified (adapted where required) |
+| J067 | `anEmptyActiveCatalogIsAUsablePatientPage` | `BookingIntegrationTests.EmptyCatalogAndMalformedPostsRemainUsableAndSafe` | Adapted | Stage 2 verified (adapted where required) |
+| J068 | `rejectedBookingPreservesEmployeeServiceAndDateSelection` | `BookingPersistenceTests.BusyHttpResponseIs503AndPreservesSelectionWithoutSaving` | Adapted | Partial Stage 2; busy/date selection checked; full conflict-selection audit deferred |
+| J069 | `subtypeEditorCannotChangeAHealthcareEmployeeIntoADoctor` | `ManagementIntegrationTests.DoctorAndHealthcareStaffRemainPolymorphicAndOfferingAssignmentIsIdempotent` | Equivalent | Stage 3 verified (adapted where required) |
+| J070 | `renamedSeedFacilityDoesNotTriggerDuplicateInitialization` | `BookingPersistenceTests.RenamedSeedAndDecidedAppointmentSurviveRestartWithoutMovingDates` | Equivalent | Stage 2 verified (adapted where required) |
+| J071 | `managerInputIsEscapedRatherThanExecutedInTheView` | `ManagementHttpTests.ForgedEditDepartmentCannotRelocateServiceAndManagerTextIsRazorEncoded` | Adapted | Stage 3 verified (adapted where required) |
+| J072 | `overlongAndExpandingLoginNamesFailAsNormalInvalidCredentials` | `FoundationIntegrationTests.WeakPasswordsAndOversizedUsernamesAreRejected + InvalidCredentialsNeverAuthenticate` | Adapted | Stage 1 verified (adapted where required) |
+| J073 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[1]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J074 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[2]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J075 | `rolePagesProvideKeyboardLandmarksAndLocalAssets(String)[3]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
 
 ### ManagementIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J076 | `shrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations(AppointmentStatus)[1]` | `ManagementIntegrationTests.ShrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations_Case1` | Equivalent | Not implemented / not run |
-| J077 | `shrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations(AppointmentStatus)[2]` | `ManagementIntegrationTests.ShrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations_Case2` | Equivalent | Not implemented / not run |
-| J078 | `rejectedReservationsNoLongerPreventAvailabilityRemoval` | `ManagementIntegrationTests.RejectedReservationsNoLongerPreventAvailabilityRemoval` | Equivalent | Not implemented / not run |
-| J079 | `facilityCreationFirstBranchGrantAndEditsAreAtomic` | `ManagementIntegrationTests.FacilityCreationFirstBranchGrantAndEditsAreAtomic` | Equivalent | Not implemented / not run |
-| J080 | `deactivationBlocksNewBookingsButPreservesExistingApprovalAndHistory` | `ManagementIntegrationTests.DeactivationBlocksNewBookingsButPreservesExistingApprovalAndHistory` | Adapted | Not implemented / not run |
-| J081 | `serviceAssignmentIsTheBranchAssignmentAndAvailabilityRequiresIt` | `ManagementIntegrationTests.ServiceAssignmentIsTheBranchAssignmentAndAvailabilityRequiresIt` | Equivalent | Not implemented / not run |
-| J082 | `forgedForeignChildIdsAreRejectedEvenUnderAnOwnedFacilityUrl` | `ManagementIntegrationTests.ForgedForeignChildIdsAreRejectedEvenUnderAnOwnedFacilityUrl` | Equivalent | Not implemented / not run |
-| J083 | `managerPagesRenderAndRejectUnauthenticatedWrongRoleAndWrongFacility` | `ManagementIntegrationTests.ManagerPagesRenderAndRejectUnauthenticatedWrongRoleAndWrongFacility` | Adapted | Not implemented / not run |
-| J084 | `realManagerFormConfigurationConnectsToPatientBookingAndNewStaffApproval` | `ManagementIntegrationTests.RealManagerFormConfigurationConnectsToPatientBookingAndNewStaffApproval` | Adapted | Not implemented / not run |
-| J085 | `catalogEditVersusBookingNeverProducesMixedOrStaleTerms` | `ManagementIntegrationTests.CatalogEditVersusBookingNeverProducesMixedOrStaleTerms` | Adapted | Not implemented / not run |
-| J086 | `serviceEditsKeepBookedSnapshotsAndReservationChecksUseBookedDuration` | `ManagementIntegrationTests.ServiceEditsKeepBookedSnapshotsAndReservationChecksUseBookedDuration` | Equivalent | Not implemented / not run |
-| J087 | `employeeShiftsCannotOverlapAcrossBranchesOrDuplicateLocally` | `ManagementIntegrationTests.EmployeeShiftsCannotOverlapAcrossBranchesOrDuplicateLocally` | Equivalent | Not implemented / not run |
-| J088 | `availabilityMustFitEntireOpeningUnion(String, String)[1]` | `ManagementIntegrationTests.AvailabilityMustFitEntireOpeningUnion_Case1` | Equivalent | Not implemented / not run |
-| J089 | `availabilityMustFitEntireOpeningUnion(String, String)[2]` | `ManagementIntegrationTests.AvailabilityMustFitEntireOpeningUnion_Case2` | Equivalent | Not implemented / not run |
-| J090 | `availabilityMustFitEntireOpeningUnion(String, String)[3]` | `ManagementIntegrationTests.AvailabilityMustFitEntireOpeningUnion_Case3` | Equivalent | Not implemented / not run |
-| J091 | `unrelatedManagerCannotReadOrModifyAnyConfigurationGroup` | `ManagementIntegrationTests.UnrelatedManagerCannotReadOrModifyAnyConfigurationGroup` | Equivalent | Not implemented / not run |
-| J092 | `unreservedDayCanBeClosedWithoutChangingOtherWeekdays` | `ManagementIntegrationTests.UnreservedDayCanBeClosedWithoutChangingOtherWeekdays` | Equivalent | Not implemented / not run |
-| J093 | `openingHourChangesProtectShiftsAndRejectOverlapsButAllowAdjacentPeriods` | `ManagementIntegrationTests.OpeningHourChangesProtectShiftsAndRejectOverlapsButAllowAdjacentPeriods` | Equivalent | Not implemented / not run |
-| J094 | `forgedDepartmentOnServiceEditCannotRelocateExistingResource` | `ManagementIntegrationTests.ForgedDepartmentOnServiceEditCannotRelocateExistingResource` | Equivalent | Not implemented / not run |
-| J095 | `simultaneousCrossBranchShiftCreationHasOneWinner` | `ManagementIntegrationTests.SimultaneousCrossBranchShiftCreationHasOneWinner` | Adapted | Not implemented / not run |
-| J096 | `duplicateUsernameCannotStealAnExistingAccount` | `ManagementIntegrationTests.DuplicateUsernameCannotStealAnExistingAccount` | Equivalent | Not implemented / not run |
-| J097 | `constructorBoundFacilityAndHoursFormsSaveRealConfiguration` | `ManagementIntegrationTests.ConstructorBoundFacilityAndHoursFormsSaveRealConfiguration` | Adapted | Not implemented / not run |
-| J098 | `bookingVersusAvailabilityShrinkHasOnlyOneSuccessfulOutcome` | `ManagementIntegrationTests.BookingVersusAvailabilityShrinkHasOnlyOneSuccessfulOutcome` | Adapted | Not implemented / not run |
-| J099 | `hoursChangeVersusNewAvailabilityCannotLeaveAnInvalidShift` | `ManagementIntegrationTests.HoursChangeVersusNewAvailabilityCannotLeaveAnInvalidShift` | Adapted | Not implemented / not run |
-| J100 | `staffEditsPreservePolymorphismAndSafeDeactivation` | `ManagementIntegrationTests.StaffEditsPreservePolymorphismAndSafeDeactivation` | Equivalent | Not implemented / not run |
-| J101 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[1]` | `ManagementIntegrationTests.AllConfigurationServicesEnforceManagerRoleDirectly_Case1` | Equivalent | Not implemented / not run |
-| J102 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[2]` | `ManagementIntegrationTests.AllConfigurationServicesEnforceManagerRoleDirectly_Case2` | Equivalent | Not implemented / not run |
-| J103 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[3]` | `ManagementIntegrationTests.AllConfigurationServicesEnforceManagerRoleDirectly_Case3` | Equivalent | Not implemented / not run |
+| J076 | `shrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations(AppointmentStatus)[1]` | `ManagementScheduleTests.ShrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations` | Equivalent | Stage 3 verified (adapted where required) |
+| J077 | `shrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations(AppointmentStatus)[2]` | `ManagementScheduleTests.ShrinkingRemovingOrMovingAvailabilityCannotInvalidateReservations` | Equivalent | Stage 3 verified (adapted where required) |
+| J078 | `rejectedReservationsNoLongerPreventAvailabilityRemoval` | `ManagementScheduleTests.RejectedReservationsReleaseAvailabilityAndHistoricalRowsRemain` | Equivalent | Stage 3 verified (adapted where required) |
+| J079 | `facilityCreationFirstBranchGrantAndEditsAreAtomic` | `ManagementIntegrationTests.FacilityCreationGrantsOwnershipAndSupportsSingleAndMultipleBranches + InvalidOrDuplicateFacilityCreationLeavesNoPartialBranchOrGrant` | Equivalent | Stage 3 verified (adapted where required) |
+| J080 | `deactivationBlocksNewBookingsButPreservesExistingApprovalAndHistory` | `ManagementIntegrationTests.DeactivationBlocksNewBookingsButKeepsHistoryAndAssignedApproval` | Adapted | Stage 3 verified (adapted where required) |
+| J081 | `serviceAssignmentIsTheBranchAssignmentAndAvailabilityRequiresIt` | `ManagementScheduleTests.PastAvailabilityAndMissingOrInactiveAssignmentsAreRejected + ShiftsCannotOverlapAcrossBranchesOrDuplicateButMayBeAdjacent` | Equivalent | Stage 3 verified (adapted where required) |
+| J082 | `forgedForeignChildIdsAreRejectedEvenUnderAnOwnedFacilityUrl` | `ManagementIntegrationTests.ForgedChildResourcesAreRejectedEvenWhenManagerOwnsTheUrlFacility` | Equivalent | Stage 3 verified (adapted where required) |
+| J083 | `managerPagesRenderAndRejectUnauthenticatedWrongRoleAndWrongFacility` | `ManagementHttpTests.ManagerPagesRenderLocalTurkishFormsAndRejectOtherRolesOrFacilities` | Adapted | Stage 3 verified (adapted where required) |
+| J084 | `realManagerFormConfigurationConnectsToPatientBookingAndNewStaffApproval` | `ManagementHttpTests.RealManagerFormsLeadToNewDoctorApprovalAndPersistAcrossRestart` | Adapted | Stage 3 verified (adapted where required) |
+| J085 | `catalogEditVersusBookingNeverProducesMixedOrStaleTerms` | `ManagementConcurrencyTests.CatalogEditVersusBookingNeverProducesMixedOrStaleTerms` | Adapted | Stage 3 verified (adapted where required) |
+| J086 | `serviceEditsKeepBookedSnapshotsAndReservationChecksUseBookedDuration` | `ManagementIntegrationTests.CatalogAndNameEditsKeepBookedSnapshotsAndExactMoney + ManagementScheduleTests.ScheduleProtectionUsesBookedDurationRatherThanCurrentCatalogDuration` | Equivalent | Stage 3 verified (adapted where required) |
+| J087 | `employeeShiftsCannotOverlapAcrossBranchesOrDuplicateLocally` | `ManagementScheduleTests.ShiftsCannotOverlapAcrossBranchesOrDuplicateButMayBeAdjacent` | Equivalent | Stage 3 verified (adapted where required) |
+| J088 | `availabilityMustFitEntireOpeningUnion(String, String)[1]` | `ManagementScheduleTests.AvailabilityMustFitTheEntireOpeningUnionIncludingLunchGap` | Equivalent | Stage 3 verified (adapted where required) |
+| J089 | `availabilityMustFitEntireOpeningUnion(String, String)[2]` | `ManagementScheduleTests.AvailabilityMustFitTheEntireOpeningUnionIncludingLunchGap` | Equivalent | Stage 3 verified (adapted where required) |
+| J090 | `availabilityMustFitEntireOpeningUnion(String, String)[3]` | `ManagementScheduleTests.AvailabilityMustFitTheEntireOpeningUnionIncludingLunchGap` | Equivalent | Stage 3 verified (adapted where required) |
+| J091 | `unrelatedManagerCannotReadOrModifyAnyConfigurationGroup` | `ManagementIntegrationTests.EveryManagementServiceEnforcesRoleAndFacilityGrantDirectly + ManagementHttpTests.ManagerPagesRenderLocalTurkishFormsAndRejectOtherRolesOrFacilities` | Equivalent | Stage 3 verified (adapted where required) |
+| J092 | `unreservedDayCanBeClosedWithoutChangingOtherWeekdays` | `ManagementScheduleTests.ClosingUnreservedDayPreservesOtherWeekdays` | Equivalent | Stage 3 verified (adapted where required) |
+| J093 | `openingHourChangesProtectShiftsAndRejectOverlapsButAllowAdjacentPeriods` | `ManagementScheduleTests.HoursProtectFutureUnbookedShiftsAndValidatePeriodsBeforeReplacement` | Equivalent | Stage 3 verified (adapted where required) |
+| J094 | `forgedDepartmentOnServiceEditCannotRelocateExistingResource` | `ManagementHttpTests.ForgedEditDepartmentCannotRelocateServiceAndManagerTextIsRazorEncoded` | Equivalent | Stage 3 verified (adapted where required) |
+| J095 | `simultaneousCrossBranchShiftCreationHasOneWinner` | `ManagementConcurrencyTests.CompetingOverlappingShiftCreationHasExactlyOneWinner` | Adapted | Stage 3 verified (adapted where required) |
+| J096 | `duplicateUsernameCannotStealAnExistingAccount` | `ManagementIntegrationTests.InvalidCredentialsOrExistingAccountsCannotCreateOrTakeOverAProfile + ManagementConcurrencyTests.CompetingStaffRegistrationsCannotDuplicateOrStealALogin` | Equivalent | Stage 3 verified (adapted where required) |
+| J097 | `constructorBoundFacilityAndHoursFormsSaveRealConfiguration` | `ManagementHttpTests.RealManagerFormsLeadToNewDoctorApprovalAndPersistAcrossRestart` | Adapted | Stage 3 verified (adapted where required) |
+| J098 | `bookingVersusAvailabilityShrinkHasOnlyOneSuccessfulOutcome` | `ManagementConcurrencyTests.BookingVersusAvailabilityShrinkHasExactlyOneSuccessfulOutcome` | Adapted | Stage 3 verified (adapted where required) |
+| J099 | `hoursChangeVersusNewAvailabilityCannotLeaveAnInvalidShift` | `ManagementConcurrencyTests.HoursChangeVersusNewAvailabilityCannotLeaveAnInvalidShift` | Adapted | Stage 3 verified (adapted where required) |
+| J100 | `staffEditsPreservePolymorphismAndSafeDeactivation` | `ManagementIntegrationTests.DoctorAndHealthcareStaffRemainPolymorphicAndOfferingAssignmentIsIdempotent + DeactivationBlocksNewBookingsButKeepsHistoryAndAssignedApproval` | Equivalent | Stage 3 verified (adapted where required) |
+| J101 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[1]` | `ManagementIntegrationTests.EveryManagementServiceEnforcesRoleAndFacilityGrantDirectly` | Equivalent | Stage 3 verified (adapted where required) |
+| J102 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[2]` | `ManagementIntegrationTests.EveryManagementServiceEnforcesRoleAndFacilityGrantDirectly` | Equivalent | Stage 3 verified (adapted where required) |
+| J103 | `allConfigurationServicesEnforceManagerRoleDirectly(String)[3]` | `ManagementIntegrationTests.EveryManagementServiceEnforcesRoleAndFacilityGrantDirectly` | Equivalent | Stage 3 verified (adapted where required) |
 
 ### AuthenticationIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J104 | `demoSeedingIsIdempotentAndStoresEncodedPasswords` | `AuthenticationIntegrationTests.DemoSeedingIsIdempotentAndStoresEncodedPasswords` | Adapted | Not implemented / not run |
-| J105 | `portalShowsOnlyAllowedNavigationAndNoPassword` | `AuthenticationIntegrationTests.PortalShowsOnlyAllowedNavigationAndNoPassword` | Adapted | Not implemented / not run |
-| J106 | `logoutRequiresCsrfAndInvalidatesSession` | `AuthenticationIntegrationTests.LogoutRequiresAntiforgeryAndClearsAuthentication` | Adapted | Not implemented / not run |
-| J107 | `unauthenticatedRequestsAreRedirectedToLogin` | `AuthenticationIntegrationTests.UnauthenticatedRequestsAreRedirectedToLogin` | Adapted | Not implemented / not run |
-| J108 | `h2ConsoleAndUnmappedRoutesAreNotExposed` | `AuthenticationIntegrationTests.DatabaseDebugAndUnknownEndpointsAreUnavailable` | Replaced | Not implemented / not run |
-| J109 | `invalidCredentialsNeverAuthenticate(String, String)[1]` | `AuthenticationIntegrationTests.InvalidCredentialsNeverAuthenticate_Case1` | Adapted | Not implemented / not run |
-| J110 | `invalidCredentialsNeverAuthenticate(String, String)[2]` | `AuthenticationIntegrationTests.InvalidCredentialsNeverAuthenticate_Case2` | Adapted | Not implemented / not run |
-| J111 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[1]` | `AuthenticationIntegrationTests.RealLoginAllowsOnlyTheAccountsRole_Case1` | Adapted | Not implemented / not run |
-| J112 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[2]` | `AuthenticationIntegrationTests.RealLoginAllowsOnlyTheAccountsRole_Case2` | Adapted | Not implemented / not run |
-| J113 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[3]` | `AuthenticationIntegrationTests.RealLoginAllowsOnlyTheAccountsRole_Case3` | Adapted | Not implemented / not run |
-| J114 | `normalizedUsernameCanAuthenticate` | `AuthenticationIntegrationTests.NormalizedUsernameCanAuthenticate` | Adapted | Not implemented / not run |
-| J115 | `loginRequiresCsrfToken` | `AuthenticationIntegrationTests.LoginRequiresCsrfToken` | Adapted | Not implemented / not run |
-| J116 | `publicPagesAndLocalStylesheetsAreAccessible` | `AuthenticationIntegrationTests.PublicPagesAndLocalStylesheetsAreAccessible` | Adapted | Not implemented / not run |
+| J104 | `demoSeedingIsIdempotentAndStoresEncodedPasswords` | `FoundationIntegrationTests.PasswordsAreHashedAndSeederNeverReplacesStoredCredentials` | Adapted | Stage 1 verified (adapted where required) |
+| J105 | `portalShowsOnlyAllowedNavigationAndNoPassword` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J106 | `logoutRequiresCsrfAndInvalidatesSession` | `FoundationIntegrationTests.LogoutRequiresAntiforgeryAndClearsTheAuthenticationCookie` | Adapted | Stage 1 verified (adapted where required) |
+| J107 | `unauthenticatedRequestsAreRedirectedToLogin` | `FoundationIntegrationTests.UnauthenticatedVisitorsAreRedirectedToLogin` | Adapted | Stage 1 verified (adapted where required) |
+| J108 | `h2ConsoleAndUnmappedRoutesAreNotExposed` | `FoundationIntegrationTests.UnimplementedFeaturesAndDatabaseFilesAreNotExposed` | Replaced | Stage 1 verified (adapted where required) |
+| J109 | `invalidCredentialsNeverAuthenticate(String, String)[1]` | `FoundationIntegrationTests.InvalidCredentialsNeverAuthenticate` | Adapted | Stage 1 verified (adapted where required) |
+| J110 | `invalidCredentialsNeverAuthenticate(String, String)[2]` | `FoundationIntegrationTests.InvalidCredentialsNeverAuthenticate` | Adapted | Stage 1 verified (adapted where required) |
+| J111 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[1]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J112 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[2]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J113 | `realLoginAllowsOnlyTheAccountsRole(String, String, String, String, String)[3]` | `FoundationIntegrationTests.RealIdentityLoginGrantsOnlyAssignedRole` | Adapted | Stage 1 verified (adapted where required) |
+| J114 | `normalizedUsernameCanAuthenticate` | `FoundationIntegrationTests.LoginAcceptsTrimmedCaseInsensitiveUsernameAndRejectsExternalReturnUrl` | Adapted | Stage 1 verified (adapted where required) |
+| J115 | `loginRequiresCsrfToken` | `FoundationIntegrationTests.LoginWithoutAntiforgeryCannotAuthenticate` | Adapted | Stage 1 verified (adapted where required) |
+| J116 | `publicPagesAndLocalStylesheetsAreAccessible` | `FoundationIntegrationTests.PublicPagesAndLocalAssetsAreAvailable` | Adapted | Stage 1 verified (adapted where required) |
 
 ### NonDemoProfileIntegrationTest
 
-| Reference case | Java execution | Proposed C# test | Treatment | C# status |
+| Reference case | Java execution | C# test / planned target | Treatment | C# status |
 | --- | --- | --- | --- | --- |
-| J117 | `injectedClockUsesTheConfiguredClinicTimeZone` | `NonDemoIntegrationTests.InjectedClockUsesTheConfiguredClinicTimeZone` | Adapted | Not implemented / not run |
-| J118 | `demoSeedingAndDemoAccessAreAbsentOutsideDemoProfile` | `NonDemoIntegrationTests.DemoSeedingAndDemoAccessAreAbsentOutsideDemoProfile` | Adapted | Not implemented / not run |
+| J117 | `injectedClockUsesTheConfiguredClinicTimeZone` | `FoundationIntegrationTests.StartupResolvesServicesAndUsesTheMigratedSqliteSchema` | Adapted | Stage 1 verified (adapted where required) |
+| J118 | `demoSeedingAndDemoAccessAreAbsentOutsideDemoProfile` | `FoundationIntegrationTests.DemoSeedingIsAbsentUnlessEnvironmentAndSettingBothEnableIt` | Adapted | Stage 1 verified (adapted where required) |
 
-Inventory total: **118 historical Java executions; 0 implemented or executed C# tests**. Update mappings and verification evidence during authorized implementation stages.
+Inventory total: **118 historical Java executions; 191 executed C# tests**. Multiple reference rows may share a C# test, so mapping counts are not additive. All 28 management execution rows now link to executed Stage 3 equivalents/adaptations. J068 explicitly retains a partial final-review status: busy handling/date preservation is exercised, while a complete conflict-page selection audit remains for Stage 4. See STAGE3_VERIFICATION.md. No source Java tests were rerun.
+
+
+Stage 2 additions beyond Java/H2 remain: native EF/SQLite enlistment before reads, stale tracker refresh, exact integer storage/constraint checks, HTTP 503 with retained selections, and two Kestrel processes sharing one file. H2 row-lock assertions were replaced by SQLite behavior. Stage 3 adds ten actual configuration races, atomic Identity user/role/profile rollback, reauthorization after writer acquisition, full booked-duration preservation, ongoing appointment protection, manager HTTP form binding, Turkish comma-decimal input without implicit thousands grouping, and new configuration/approval persistence across separate host lifetimes. J003's nullable Java role element has no direct non-nullable C# enum equivalent; invalid enum/empty role snapshots are covered without introducing nullable domain roles. J026's local same-day rule belongs to the application timezone boundary rather than a generic UTC interval object.
+
+Stage 3 preserves all 113 prior discovered cases. The public-homepage test now expects implemented management copy instead of the word “later”; two unmapped-route theory inputs changed from the newly implemented manager URLs to deferred payment/medical-record routes. No test was removed or skipped. Historical Stage 1/2 reports describe the behavior at those earlier checkpoints.

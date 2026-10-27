@@ -1,0 +1,20 @@
+@model IReadOnlyList<FacilityRow>
+@{ ViewData["Title"] = "Kurumlarım"; }
+<section class="page-intro"><p class="eyebrow">YÖNETİCİ</p><h1>Kurumlarım</h1><p>Hastane veya kliniğinizi oluşturun; şube, hizmet ve çalışan takvimini yönetin.</p></section>
+<div class="row g-4">
+    <section class="col-lg-7"><div class="management-card"><h2>Yetkili olduğum kurumlar</h2>
+        @if (Model.Count == 0) { <p>Henüz bir kurumunuz yok. İlk kurumunuzu yan taraftan ekleyin.</p> }
+        <ul class="list-group list-group-flush">
+        @foreach (var facility in Model)
+        { <li class="list-group-item px-0 py-3"><a href="/manager/facilities/@facility.Id">@facility.Name</a> <span class="text-secondary">· @(facility.Type == FacilityType.Hospital ? "Hastane" : "Klinik")</span></li> }
+        </ul>
+    </div></section>
+    <section class="col-lg-5"><div class="management-card"><h2>Yeni kurum</h2><p class="text-secondary">İlk şube kurumla birlikte kaydedilir. Daha sonra yeni şubeler ekleyebilirsiniz.</p>
+        <form action="/manager/facilities" method="post" asp-antiforgery="true" class="form-stack">
+            <div><label for="new-facility-name" class="form-label">Kurum adı</label><input id="new-facility-name" name="Name" class="form-control" maxlength="255" required /></div>
+            <div><label for="new-facility-type" class="form-label">Kurum türü</label><select id="new-facility-type" name="Type" class="form-select"><option value="Hospital">Hastane</option><option value="Clinic">Klinik</option></select></div>
+            <div><label for="first-branch" class="form-label">İlk şube adı</label><input id="first-branch" name="FirstBranchName" class="form-control" maxlength="255" required /></div>
+            <button type="submit" class="btn btn-primary">Kurumu oluştur</button>
+        </form>
+    </div></section>
+</div>

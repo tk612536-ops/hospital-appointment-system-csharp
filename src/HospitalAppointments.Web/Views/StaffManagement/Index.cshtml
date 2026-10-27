@@ -1,0 +1,73 @@
+@model ManagementPage
+@{ ViewData["Title"] = "Çalışanlar ve atamalar"; var root = "/manager/facilities/" + Model.Facility.Id + "/staff"; }
+<partial name="_ManagementNavigation" model="Model" />
+<section class="management-card mb-4"><h2>Doktor uzmanlıkları</h2><p class="text-secondary">Uzmanlıklar ortak bir sözlüktür. Aynı ad yeniden girilirse mevcut uzmanlık kullanılır.</p>
+    <p>@string.Join(" · ", Model.Specialties.Select(s => s.Label))</p>
+    <form action="@root/specialties" method="post" asp-antiforgery="true" class="row g-2 align-items-end">
+        <div class="col-md-8"><label for="specialty-name" class="form-label">Yeni uzmanlık adı</label><input id="specialty-name" name="Name" class="form-control" maxlength="255" required /></div>
+        <div class="col-md-4"><button class="btn btn-primary" type="submit">Uzmanlık ekle</button></div>
+    </form>
+</section>
+<div class="row g-4 mb-4">
+    <section class="col-lg-6"><div class="management-card"><h2>Doktor kaydı</h2>
+        @if (Model.Specialties.Count == 0) { <p>Önce bir uzmanlık ekleyin.</p> }
+        else
+        {
+            <form action="@root/doctors" method="post" asp-antiforgery="true" class="form-stack">
+                <div><label for="doctor-name" class="form-label">Ad soyad</label><input id="doctor-name" name="Name" class="form-control" maxlength="120" required /></div>
+                <div><label for="doctor-specialty" class="form-label">Uzmanlık</label><select id="doctor-specialty" name="SpecialtyId" class="form-select" required>@foreach (var specialty in Model.Specialties) { <option value="@specialty.Id">@specialty.Label</option> }</select></div>
+                <fieldset class="optional-account"><legend>İsteğe bağlı personel girişi</legend><p>İki alanı da boş bırakabilir veya yeni bir kullanıcı adı ve parola belirleyebilirsiniz.</p>
+                    <div class="mb-2"><label for="doctor-username" class="form-label">Yeni kullanıcı adı</label><input id="doctor-username" name="Username" class="form-control" autocomplete="off" maxlength="80" /></div>
+                    <div><label for="doctor-password" class="form-label">Yeni parola</label><input id="doctor-password" name="Password" type="password" class="form-control" autocomplete="new-password" maxlength="128" /><small>En az 8 karakter; büyük/küçük harf, rakam ve simge.</small></div>
+                </fieldset>
+                <button class="btn btn-primary" type="submit">Doktoru kaydet</button>
+            </form>
+        }
+    </div></section>
+    <section class="col-lg-6"><div class="management-card"><h2>Sağlık personeli kaydı</h2>
+        <form action="@root/healthcare" method="post" asp-antiforgery="true" class="form-stack">
+            <div><label for="healthcare-name" class="form-label">Ad soyad</label><input id="healthcare-name" name="Name" class="form-control" maxlength="120" required /></div>
+            <div><label for="healthcare-title" class="form-label">Meslek / görev</label><input id="healthcare-title" name="JobTitle" class="form-control" maxlength="255" placeholder="Örn. Fizyoterapist" required /></div>
+            <fieldset class="optional-account"><legend>İsteğe bağlı personel girişi</legend><p>Mevcut bir hesap bağlanamaz. Yeni hesaba yalnızca personel yetkisi verilir.</p>
+                <div class="mb-2"><label for="healthcare-username" class="form-label">Yeni kullanıcı adı</label><input id="healthcare-username" name="Username" class="form-control" autocomplete="off" maxlength="80" /></div>
+                <div><label for="healthcare-password" class="form-label">Yeni parola</label><input id="healthcare-password" name="Password" type="password" class="form-control" autocomplete="new-password" maxlength="128" /><small>En az 8 karakter; büyük/küçük harf, rakam ve simge.</small></div>
+            </fieldset>
+            <button class="btn btn-primary" type="submit">Personeli kaydet</button>
+        </form>
+    </div></section>
+</div>
+<section class="management-card mb-4"><h2>Çalışanlar</h2><p class="text-secondary">Pasif çalışanlara yeni randevu alınamaz. Mevcut randevular, geçmiş bilgiler ve değerlendirme yetkisi korunur.</p>
+    @if (Model.Staff.Count == 0) { <p>Henüz çalışan eklenmedi.</p> }
+    @foreach (var employee in Model.Staff)
+    {
+        <details class="management-detail"><summary>@employee.Name · @employee.Profession · @(employee.Active ? "Etkin" : "Pasif")</summary>
+            <p class="mt-3">@(employee.HasLogin ? "Personel giriş hesabı var." : "Giriş hesabı olmadan kayıtlı.") Hizmet atanan şubeler: @(string.IsNullOrEmpty(employee.Branches) ? "Henüz yok" : employee.Branches)</p>
+            <form action="@root/@(employee.IsDoctor ? "doctors" : "healthcare")/@employee.Id" method="post" asp-antiforgery="true" class="row g-3 align-items-end">
+                <div class="col-md-4"><label for="staff-name-@employee.Id" class="form-label">Ad soyad</label><input id="staff-name-@employee.Id" name="Name" value="@employee.Name" class="form-control" maxlength="120" required /></div>
+                <div class="col-md-4">
+                    @if (employee.IsDoctor)
+                    { <label for="staff-specialty-@employee.Id" class="form-label">Uzmanlık</label><select id="staff-specialty-@employee.Id" name="SpecialtyId" class="form-select" required>@foreach (var specialty in Model.Specialties) { <option value="@specialty.Id" selected="@(employee.SpecialtyId == specialty.Id)">@specialty.Label</option> }</select> }
+                    else
+                    { <label for="staff-title-@employee.Id" class="form-label">Meslek / görev</label><input id="staff-title-@employee.Id" name="JobTitle" value="@employee.JobTitle" class="form-control" maxlength="255" required /> }
+                </div>
+                <div class="col-md-2"><label class="form-check-label" for="staff-active-@employee.Id"><input class="form-check-input" id="staff-active-@employee.Id" name="Active" type="checkbox" value="true" checked="@employee.Active" /> Etkin</label><input name="Active" type="hidden" value="false" /></div>
+                <div class="col-md-2"><button class="btn btn-primary" type="submit">Kaydet</button></div>
+            </form>
+        </details>
+    }
+</section>
+<section class="management-card mb-4"><h2>Hizmet ve şube ataması</h2><p class="text-secondary">Çalışan, seçilen hizmetin bölüm ve şubesine atanır. Birden fazla şubede görev alabilir. Yalnızca nitelikli olduğu hizmetleri atayın.</p>
+    @if (!Model.Staff.Any(s => s.Active) || !Model.Services.Any(s => s.Active)) { <p>Atama için etkin bir çalışan ve etkin bir hizmet gereklidir.</p> }
+    else
+    {
+        <form action="@root/offerings" method="post" asp-antiforgery="true" class="row g-3 align-items-end">
+            <div class="col-md-5"><label for="offering-staff" class="form-label">Çalışan</label><select id="offering-staff" name="StaffId" class="form-select" required>@foreach (var employee in Model.Staff.Where(s => s.Active)) { <option value="@employee.Id">@employee.Name · @employee.Profession</option> }</select></div>
+            <div class="col-md-5"><label for="offering-service" class="form-label">Şube / hizmet</label><select id="offering-service" name="ServiceId" class="form-select" required>@foreach (var service in Model.Services.Where(s => s.Active)) { <option value="@service.Id">@service.Branch / @service.Department / @service.Name</option> }</select></div>
+            <div class="col-md-2"><button class="btn btn-primary" type="submit">Hizmet ata</button></div>
+        </form>
+    }
+    <div class="table-responsive mt-4"><table class="table align-middle"><caption>Hizmet atamaları</caption><thead><tr><th>Çalışan</th><th>Şube</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>
+    @foreach (var offering in Model.Offerings)
+    { <tr><td>@offering.Staff</td><td>@offering.Branch</td><td>@offering.Service</td><td>@(offering.Active ? "Etkin" : "Pasif")</td><td><form action="@root/offerings/@offering.Id/active" method="post" asp-antiforgery="true"><input name="active" value="@((!offering.Active).ToString().ToLowerInvariant())" type="hidden" /><button class="btn btn-outline-primary btn-sm" type="submit">@(offering.Active ? "Pasifleştir" : "Etkinleştir")</button></form></td></tr> }
+    </tbody></table></div>
+</section>

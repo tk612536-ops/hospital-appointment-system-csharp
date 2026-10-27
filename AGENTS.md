@@ -3,13 +3,13 @@
 ## Authorization and reference protection
 
 - Build the university Hospital/Clinic Appointment System in C#/.NET 10. Read REQUIREMENTS.md, docs/PLAN.md, docs/CONCURRENCY.md and docs/TEST_PARITY.md.
-- The design is approved, but **Stage 0 only is currently authorized**: save planning documents, initialize local Git, add .gitignore, verify the designated repository/new GitHub account, review staged content, and create/push **one genuine initial planning commit** at the actual current time.
-- Stop after Stage 0 verification/reporting. Do not scaffold ASP.NET Core, generate solution/project files, restore application packages, implement tests/application code or proceed to Stage 1 without explicit approval.
-- Each later stage requires an explicit checkpoint approval. All later commits/pushes require explicit authorization; this single-commit permission does not persist beyond Stage 0.
+- Stages 0–3 are accepted. On 27 October 2026 the owner authorized **one genuine Stage 1–3 checkpoint commit and push to existing main** after reviewing Git hygiene and verifying Git transport account/remote. Use the actual time, preserve initial history, never force-push. If push fails, stop and explain.
+- **Only after that checkpoint is successfully pushed and verified**, Stage 4 is authorized: teacher-requirements/OOP/architecture/security review, necessary fixes, Turkish responsive/accessibility improvements, final tests and Release publish, Turkish presentation guide and Windows delivery documentation. Preserve all 191 existing tests. Do not implement unrelated features.
+- No additional commit or push is authorized beyond that single checkpoint. Stop after Stage 4 verification/reporting. Preserve the existing initial commit and its actual timestamp.
 - The Java project at `C:\Users\muhammed\Desktop\hospital-appointment-system` is a read-only reference. Never edit, delete, reset, migrate, run its application/build/tests, or execute any operation that writes within that directory.
 - Keep C# work under `C:\Users\muhammed\Desktop\hospital-appointment-system-csharp`.
 - Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csharp.git`. Verify the Git transport account is `tk612536-ops`, not the old account, before committing/pushing. Do not overwrite remote history or force-push.
-- Never fabricate timestamps, backdate commits or imply development occurred on dates when it did not. Preserve meaningful work across at least ten actual development days; only Stage 0 is currently authorized.
+- Never fabricate timestamps, backdate commits or imply development occurred on dates when it did not. Preserve meaningful work across at least ten actual development days.
 - Use synthetic demonstration data only. Exclude real credentials, personal/clinical data and local databases from version control.
 
 ## Architecture and implementation when authorized
@@ -39,8 +39,13 @@
 ## Verification and teaching
 
 - Add meaningful tests with each authorized implementation stage. Test actual concurrency with independent connections/transactions against one SQLite file, including cross-process verification.
-- Port behavioral Java coverage and explain provider-specific replacements in docs/TEST_PARITY.md. No C# tests exist during Stage 0.
+- Port behavioral Java coverage and explain provider-specific replacements in docs/TEST_PARITY.md. Stage 1 has actual foundation tests; do not confuse their count with the historical 118 Java cases.
 - Report only commands/results actually executed. Never describe Java's historical 118-test result as C# coverage or a newly rerun result.
 - Seed future synthetic dates idempotently in explicit demo mode. Restart must never silently move or duplicate saved appointments. Document deliberate reset/extension of an aged demo.
 - Keep local assets, diagrams, requirement coverage, setup and presentation explanations consistent with implemented code.
 - Finish each authorized stage with evidence, limitations and a clear checkpoint. Administrative submission/attendance/history requirements are separate from passing tests.
+
+## Current checkpoint evidence
+
+- Stage 3 is accepted. docs/STAGE3_VERIFICATION.md records the actual 191 passing tests (31 domain, 26 application, 134 integration), live manager-created booking/approval and restart evidence. Preserve every existing case.
+- At checkpoint preparation Stages 1–3 are local/uncommitted and the sole Stage 0 commit is preserved. Verify the authorized checkpoint before starting Stage 4; keep all Stage 4 changes uncommitted.

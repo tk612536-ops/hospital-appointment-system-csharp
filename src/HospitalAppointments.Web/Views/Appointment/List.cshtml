@@ -1,0 +1,9 @@
+@model IReadOnlyList<HospitalAppointments.Application.Contracts.AppointmentView>
+<section class="page-intro"><p class="eyebrow">RANDEVULAR</p><h1>@ViewData["Title"]</h1><p>Yalnızca hesabınızın görmeye yetkili olduğu randevular listelenir.</p></section>
+@if (Model.Count == 0) { <p class="notice">Henüz listelenecek randevu bulunmuyor.</p> }
+else
+{
+    <div class="table-responsive feature-card"><table class="table align-middle"><caption>Randevu tarihi, hizmet, çalışan ve güncel durum</caption><thead><tr><th scope="col">Tarih / saat</th><th scope="col">Hizmet</th><th scope="col">Çalışan</th><th scope="col">Durum</th><th scope="col">Ayrıntı</th></tr></thead><tbody>
+    @foreach (var row in Model) { <tr><td>@row.Start.ToString("dd.MM.yyyy HH:mm")</td><td>@row.ServiceName<br /><small>@row.Facility / @row.Branch</small></td><td>@row.StaffName</td><td>@AppointmentLabels.For(row.Status)</td><td><a href="/appointments/@row.Id" aria-label="Randevu @row.Id ayrıntıları">Görüntüle →</a></td></tr> }
+    </tbody></table></div>
+}

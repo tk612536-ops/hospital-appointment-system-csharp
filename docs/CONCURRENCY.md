@@ -1,6 +1,6 @@
 # SQLite booking and configuration concurrency
 
-Status: **approved design; implementation and executable proof not yet authorized**. Stage 0 records the protocol only. Java's H2 tests do not establish SQLite correctness.
+Status: **booking, decisions and configuration implemented and tested through Stage 3**, 26 October 2026. Separate-connection/process booking evidence is in STAGE2_VERIFICATION.md; configuration races, Identity atomicity and HTTP evidence are in STAGE3_VERIFICATION.md. Java's H2 tests are not SQLite evidence.
 
 ## Problem and preserved rules
 
@@ -34,9 +34,9 @@ For two conflicting commands A and B, only one acquires the writer position firs
 
 This also covers different staff for the same patient and the same staff across branches, provided overlap queries include the full resource scope. Distinct non-overlapping bookings can both succeed, one after the other. Candidate reads remain advisory and do not reserve anything.
 
-This is a reasoned database protocol, **not a claim of executed correctness**. Stage 2 must prove the actual provider/EF behavior and final persisted outcomes.
+Stage 2 executed this protocol on EF Core/Microsoft.Data.Sqlite 10.0.14. Independent connections and two real Kestrel processes sharing one file produced one winner for conflicting requests; adjacent requests both committed. An adapter test verified the enlisted native transaction blocks a second writer before domain reads. This is observed evidence within the stated local deployment boundary, not a production capacity guarantee.
 
-## All relevant writers use the protocol
+## Implemented writers and configuration protocol
 
 | Command | Required fresh checks inside writer scope |
 | --- | --- |
@@ -47,6 +47,8 @@ This is a reasoned database protocol, **not a claim of executed correctness**. S
 | Catalog revision | Scope, complete new terms, version increment and unchanged historical snapshots. |
 | Staff/offering activation changes | Scope and active eligibility; existing history/decisions remain available. |
 | Optional new staff login | New Identity account/STAFF role and domain profile together, no takeover or submitted elevated role. |
+
+All listed commands now run through the existing SqliteWriteTransaction. ManagementScope checks the manager role/grant cheaply before waiting, then reloads both inside the acquired writer scope. Each child is loaded after acquisition and checked against the requested facility. First-facility creation atomically saves its first branch and creator grant. Optional new STAFF credentials use UserManager on that same scoped ApplicationDbContext; failed profile construction rolls back the already-saved Identity user/role as well. Seed bootstrap remains an atomic startup operation before serving requests.
 
 For booking versus incompatible schedule edits, the earlier valid transaction determines the later command's validation result. Deactivation may follow an existing reservation without deleting it. Catalog edits may follow a booking, but that booking retains an internally consistent old snapshot. If terms changed first, an old booking form must be rejected for review.
 
@@ -81,7 +83,13 @@ Use migrated temporary **file-backed SQLite**, independent DbContexts/physical c
 10. Assert the loser reads after the winner's commit; verify EF enlisted the intended transaction and current data was used.
 11. Run two actual application processes sharing the same local file and verify conflicting bookings remain protected without a process-local mutex.
 
-Inspect final rows, audit fields and interval invariants, not only response strings. Record versions, synchronization strategy, commands and actual results in future stage verification. Tests do not exist yet.
+BookingConcurrencyTests, CrossProcessBookingTests and BookingPersistenceTests retain writer acquisition/enlistment, insert/decision races, stale tracker, rollback, timeout/retry and HTTP 503 evidence. ManagementConcurrencyTests adds ten executed cases: booking versus shift shrink; booking versus safe/unsafe hours replacement; booking versus service deactivation; catalog revision versus booking; overlapping shifts within/across branches; hours versus new shift; competing edits of one shift; and duplicate-login provisioning. Competitors use independent connections to the same migrated SQLite file and verify persisted shift coverage, cross-branch nonoverlap, reservation coverage and coherent terms after commit.
+
+Unsafe hours edits are rejected even if they acquire the writer before a booking because **future unbooked shifts are also protected**. For a compatible hours replacement both commands may succeed; tests assert this distinction. Deactivation always may follow an existing booking while preventing new ones, so it does not imply exactly one total command succeeds. Safe competing edits of one shift can both commit; the last validated state wins. No stale-edit token/automatic merge UI is claimed.
+
+ManagementScheduleTests additionally protects future/ongoing Pending and Approved intervals on shrink/move/remove, ignores Rejected reservations, uses original booked duration after catalog changes, validates lunch gaps/adjacency and protects unbooked shifts. ManagementHttpTests proves bounded configuration 503/no partial account and a successful fresh retry. ManagementIntegrationTests proves account/role/profile rollback after an Identity save followed by invalid profile data. Constraint conflicts are translated at SaveAsync into a safe application error; acquisition/enlistment/serialization are unchanged. No new locking strategy was introduced.
+
+See STAGE3_VERIFICATION.md for executed commands/counts. Stage 3 needs no schema migration; all three existing migrations are retained. The historical SQLite table-rebuild migration warning is documented in STAGE2_VERIFICATION.md and does not change this command protocol.
 
 ## Primary references
 

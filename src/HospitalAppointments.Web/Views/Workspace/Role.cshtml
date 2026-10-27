@@ -1,0 +1,19 @@
+@model AccountProfile
+@{
+    var role = (AccountRole)ViewData["Role"]!;
+    var title = role switch { AccountRole.Patient => "Hasta alanı", AccountRole.Staff => "Personel alanı", _ => "Yönetici alanı" };
+    ViewData["Title"] = title;
+}
+<section class="page-intro"><p class="eyebrow">@title.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR"))</p><h1>@Model.DisplayName</h1><p>Bu çalışma alanına erişiminiz doğrulandı.</p></section>
+<section class="workspace-panel" aria-labelledby="foundation-heading">
+    <span class="phase-label">Randevu işlemleri · Hazır</span>
+    <h2 id="foundation-heading">Hesabınızla güvenli erişim</h2>
+    <p>Giriş, çıkış ve rol tabanlı erişim bu sürümde kullanılabilir.</p>
+    @if (role == AccountRole.Patient)
+    { <p class="coming-note"><a href="/patient/book">Randevu alın</a> veya <a href="/patient/appointments">randevularınızın durumunu takip edin</a>.</p> }
+    else if (role == AccountRole.Staff)
+    { <p class="coming-note"><a href="/work/appointments">Size atanmış randevuları inceleyin; onaylayın veya reddedin.</a></p> }
+    else
+    { <p class="coming-note"><a href="/manager/facilities">Kurum, hizmet, çalışan ve takvimlerinizi yönetin.</a> <a href="/work/appointments">Kurum randevularını değerlendirin.</a></p> }
+    <a href="/workspace">Tüm çalışma alanlarım <span aria-hidden="true">→</span></a>
+</section>

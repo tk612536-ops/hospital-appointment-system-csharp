@@ -1,0 +1,31 @@
+@model LoginInput
+@inject IWebHostEnvironment HostEnvironment
+@inject IConfiguration Configuration
+@{ ViewData["Title"] = "Giriş yap"; }
+<div class="login-grid">
+    <section class="login-intro">
+        <p class="eyebrow">ÇALIŞMA ALANINIZA ERİŞİN</p>
+        <h1>Tek giriş.<br />Size uygun alan.</h1>
+        <p>Hesabınızın yetkilerine göre hasta, personel veya yönetici alanına yönlenin.</p>
+        <div class="notice"><strong>Yerel gösterim</strong><p>Hastalar randevu alabilir, personel randevuları değerlendirebilir ve yöneticiler kendi kurumlarının hizmet ve takvimlerini düzenleyebilir.</p></div>
+    </section>
+    <section class="login-card" aria-labelledby="login-heading">
+        <h2 id="login-heading">Giriş yap</h2>
+        <p class="text-secondary">Devam etmek için hesap bilgilerinizi girin.</p>
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div class="mb-3"><label asp-for="Username" class="form-label"></label><input asp-for="Username" class="form-control" autocomplete="username" maxlength="80" required /></div>
+            <div class="mb-4"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="current-password" maxlength="128" required /></div>
+            <button class="btn btn-primary w-100" type="submit">Giriş yap</button>
+        </form>
+        @if (HostEnvironment.IsEnvironment("Demo") && Configuration.GetValue<bool>("Demo:Enabled"))
+        {
+            <aside class="demo-accounts" aria-label="Gösterim hesapları">
+                <h3>Yalnızca yerel gösterim için</h3>
+                <p>Hasta: <code>patient</code> · Personel: <code>staff</code> · Yönetici: <code>manager</code></p>
+                <p class="mb-0">Ortak gösterim parolası: <code>KlinikDemo10!</code></p>
+            </aside>
+        }
+    </section>
+</div>

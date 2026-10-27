@@ -1,0 +1,11 @@
+@model AccountProfile
+@{ ViewData["Title"] = "Çalışma alanım"; }
+<section class="page-intro"><p class="eyebrow">ÇALIŞMA ALANIM</p><h1>Hoş geldiniz, @Model.DisplayName.</h1><p>Hesabınıza tanımlanan alanlardan birini seçin.</p></section>
+<div class="row g-4">
+    @if (Model.Roles.Contains(AccountRole.Patient))
+    { <div class="col-md-6"><article class="feature-card"><h2>Hasta alanı</h2><p>Hasta çalışma alanınıza erişin.</p><a class="btn btn-primary" href="/patient">Hasta alanını aç</a></article></div> }
+    @if (Model.Roles.Contains(AccountRole.Staff))
+    { <div class="col-md-6"><article class="feature-card"><h2>Personel alanı</h2><p>Sağlık çalışanı çalışma alanınıza erişin.</p><a class="btn btn-primary" href="/staff">Personel alanını aç</a></article></div> }
+    @if (Model.Roles.Contains(AccountRole.Manager))
+    { <div class="col-md-6"><article class="feature-card"><h2>Yönetici alanı</h2><p>Yönetici çalışma alanınıza erişin.</p><a class="btn btn-primary" href="/manager">Yönetici alanını aç</a></article></div> }
+</div>

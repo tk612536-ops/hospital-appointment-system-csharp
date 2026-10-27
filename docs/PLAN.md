@@ -1,12 +1,12 @@
 # Approved C# implementation plan
 
-Design approved by the owner. **Only Stage 0 is authorized.** Baseline: 26 October 2026 (Europe/Istanbul). This is a new implementation; Java's completed stages do not confer approval on C# implementation stages.
+Design approved by the owner. Stages 0–2 are accepted; **Stage 3 management/configuration is authorized and implemented**. Baseline: 26 October 2026 (Europe/Istanbul). Stage 4 remains unauthorized. No commit/push is authorized. Actual evidence is in STAGE3_VERIFICATION.md; earlier reports are historical.
 
 ## Grounded baseline
 
 Read-only reference: `C:\Users\muhammed\Desktop\hospital-appointment-system`. New workspace: `C:\Users\muhammed\Desktop\hospital-appointment-system-csharp`. The original teacher DOCX, requirements, plan/UML, architecture review, presentation guide, implementation and eleven test suites were inspected. The original source permits any language; the professor's later explicit C# instruction governs this project.
 
-Installed during planning: .NET SDK **10.0.403**, ASP.NET Core/.NET runtime **10.0.14**, Windows x64. The initial C# directory was empty. Existing Java reports contain 118 successful test executions; no Java tests were rerun and no C# test result is claimed.
+Installed during planning: .NET SDK **10.0.403**, ASP.NET Core/.NET runtime **10.0.14**, Windows x64. The initial C# directory was empty. Existing Java reports contain 118 historical successful executions and were not rerun. Current C# foundation results are recorded separately in STAGE1_VERIFICATION.md.
 
 Preferences: ASP.NET Core Identity; Turkish user interface and presentation notes; English identifiers and technical documentation. Preserve all T01–T13 application requirements in [REQUIREMENTS.md](../REQUIREMENTS.md), with administrative obligations tracked separately.
 
@@ -32,7 +32,7 @@ tests/
 docs/
 ```
 
-This tree is a future target, not files to generate during Stage 0. Domain has no project/framework dependencies. Application references Domain. Infrastructure references Application and Domain. Web references Application and Infrastructure to compose DI; controllers receive application services, not DbContext or repositories.
+The seven projects, domain model, booking flow and scoped management services/screens now exist. Domain has no project/framework dependencies. Application references Domain. Infrastructure references Application and Domain. Web references Application and Infrastructure to compose DI; controllers receive application services, not DbContext or repositories.
 
 ```mermaid
 flowchart LR
@@ -57,7 +57,7 @@ Use constructor injection, acyclic service collaborations and cancellation token
 
 ## Dependency baseline
 
-Target net10.0. Future Stage 1 pins SDK 10.0.403 with patch-only roll-forward and enables nullable reference types. Use central package versions, lock files and a local tool manifest.
+Target net10.0. Stage 1 pins SDK 10.0.403 with patch-only roll-forward and nullable reference types. Central package versions, seven lock files and a root dotnet-tools.json local tool manifest are implemented. Microsoft.Extensions.TimeProvider.Testing remains deferred until a time-sensitive business use case needs it; Stage 1 uses TimeProvider.System and configured TimeZoneInfo without that extra dependency.
 
 | Package/tool | Pinned version |
 | --- | --- |
@@ -101,7 +101,7 @@ Package availability and framework metadata were checked during planning against
 
 ## Domain and EF relationships
 
-Use one ApplicationDbContext derived from `IdentityDbContext<ApplicationUser, IdentityRole<long>, long>`. Use long keys. Domain patient/staff/grant/decision references use scalar account IDs; infrastructure defines foreign keys to Identity users. Application access DTOs expose current roles/enabled state/grants without exposing hashes or Identity entities.
+Use one ApplicationDbContext derived from `IdentityDbContext<ApplicationUser, IdentityRole<long>, long>`. It maps Identity and the domain. Stage 3 reuses the existing schema: no new tables/columns are needed and the pending-model check confirms this. AccountProfile remains an immutable domain read snapshot, not another identity store. Patient/staff/grant/decision references use scalar account IDs; infrastructure defines Identity foreign keys without bringing framework types into Domain. Booking access checks combine current account roles with patient/assigned-staff/facility relationships.
 
 ```mermaid
 classDiagram
@@ -133,6 +133,7 @@ classDiagram
 - Availability is staff/branch/date-specific and independent of individual services. Active service assignment at that branch is required for new availability.
 - Patients require a unique account link. Staff accounts are optional/unique; one account can have both profiles. Identity composes roles.
 - Appointment links patient/offering and snapshots booked service/staff names, duration, fee/currency, start/end, creation/status and optional decision actor/time.
+- Facility/branch names and the professional description shown on an appointment are current linked labels. They are not additional snapshots; renaming these does not alter booked service/staff names or terms.
 - Persist staff with **table-per-hierarchy** and a discriminator, replacing Java JOINED inheritance. Check doctor specialty/healthcare-worker job-title consistency. This simplifies SQLite joins without changing C# OOP semantics.
 
 Use private setters/backing fields, validating constructors and named behavior. Do not bind entities to HTTP. Preserve restrictive deletion and deactivate referenced records. Keep navigation loading explicit; return fully prepared read DTOs rather than relying on lazy loading in Razor.
@@ -147,7 +148,7 @@ Use EF migrations from Stage 1; apply identical migrations to integration databa
 
 | Concept | Concrete implementation and explanation |
 | --- | --- |
-| Encapsulation | Appointment.Approve/Reject, HealthcareService.ReviseTerms and named activation methods; validate before mutation, including failed-operation atomicity. |
+| Encapsulation | Appointment.Approve/Reject, atomic HealthcareService.UpdateDetails, AvailabilityWindow.Reschedule and named activation methods; private state and immutable ownership/resource links. |
 | Inheritance | Doctor and HealthcareStaff share real staff identity/employment/eligibility; subtype fields retain real meaning. |
 | Abstraction | Abstract staff professional-description contract and focused repository/security/transaction ports. |
 | Polymorphism | Mixed staff lists call the shared description member; doctor supplies specialty and healthcare worker supplies job title. Common booking has no staff-type switch. |
@@ -171,14 +172,24 @@ Turkish screens: login/role workspaces; patient catalog → employee → date �
 
 Core scheduling and concurrency are specified in [CONCURRENCY.md](CONCURRENCY.md). Bookings are future/same-local-day, half-open intervals, 15-minute starts, full coverage of both opening and matching staff availability, with global patient and cross-branch employee conflicts. Pending/Approved reserve; Rejected releases. Snapshots survive catalog edits and deactivation. Decisions are single transitions and remain available after offering deactivation.
 
+## Implemented management module
+
+FacilityManagementController → FacilityManagementService → IFacilityManagementRepository handles owned institutions/branches/departments. CatalogManagementController → CatalogManagementService → ICatalogManagementRepository validates complete service terms. StaffManagementController → StaffManagementService → IStaffManagementRepository and IStaffAccountProvisioner registers either subtype and assigns/deactivates offerings. ScheduleManagementController → ScheduleManagementService → IScheduleManagementRepository plus the existing opening-query port handles validated dated shifts and weekly replacements. ManagementQueryService prepares immutable, credential-free page DTOs through the read repository. ManagementScope centralizes only the shared manager/grant/writer entry checks; it is not a generic CRUD framework.
+
+All repositories/Identity writes share the scoped EF context. Child IDs are checked against their actual owner, not trusted from a route or form. Specialty is a shared immutable dictionary; managers can create/reuse a name through an owned institution but cannot edit other institutions' staff. Existing employee accounts cannot be attached or elevated. The same StaffOffering defines both qualification and branch assignment.
+
+Schedule changes protect future/ongoing reserved intervals (`End > now`, Pending/Approved), using the union of remaining matching shifts plus the proposal. Whole intervals must fit opening periods, including lunch gaps. Other-branch shifts also conflict for the same employee. Opening edits protect future shifts as well as reservations. Staff/service/offering deactivation changes new-booking eligibility while preserving historical rows and decision access. Managers may reactivate; structural resource links are immutable.
+
+The Turkish management fee binder allows comma decimals and forbids implicit thousands grouping; domain validation additionally rejects fractional minor units and bounds violations. Date inputs and defaults use ClinicTime/TimeProvider. Four initial opening-period rows are shown; all stored rows are retained in the editor if more exist. No new schema or dependency was needed.
+
 ## Stages and checkpoints
 
 | Stage | Deliverable | Exit evidence |
 | --- | --- | --- |
-| 0 — authorized | Approved documents, active AGENTS.md, .gitignore, local Git, verified new account/remote and one authorized initial commit/push | Review staged content, verify published SHA and branch, report authentication/repository issues; stop. |
-| 1 — not authorized | Solution/DI, Identity, initial migrations, local Turkish layout, synthetic role accounts | Locked restore, build and actual test discovery; login/routes/antiforgery/migrations pass. |
-| 2 — not authorized | Domain hierarchy, seeded catalog/shifts, booking/details/lists/approval/rejection, SQLite transaction adapter | Patient → staff decision → patient flow; interval/ownership/snapshot tests and real concurrency proof. |
-| 3 — not authorized | Scoped facility/branch/department/service/staff/specialty/offering/hours/availability management | Newly configured services become bookable and new staff can approve; configuration races preserve valid state. |
+| 0 — accepted | Approved documents, active AGENTS.md, .gitignore, local Git, verified new account/remote and one authorized initial commit/push | Published commit 48d924fb90b8a5d549c46bec1491c1b9b301cc7e, 26 October 2026. |
+| 1 — accepted | Solution/DI, Identity, initial migrations, local Turkish layout, synthetic role accounts | Historical 57-test evidence in STAGE1_VERIFICATION.md, retained in Stage 2. |
+| 2 — accepted | Domain hierarchy, seeded catalog/shifts, booking/details/lists/approval/rejection, SQLite transaction adapter | Historical 113-test and separate-connection/process evidence in STAGE2_VERIFICATION.md, retained in Stage 3. |
+| 3 — implemented; checkpoint pending | Scoped facility/branch/department/service/staff/specialty/offering/hours/availability management | 191 passing tests, manager-created catalog → patient booking → new doctor approval → restart, and configuration races. STAGE3_VERIFICATION.md. Stop here; no commit/push. |
 | 4 — not authorized | Parity/security/OOP review, accessibility polish, restart/offline rehearsal and Turkish presentation guide | Requirement evidence, full build/test/publish and packaged demonstration; honest limitations. |
 
 Stop at every stage checkpoint. Passing a stage does not authorize the next stage or further commits/pushes. Stage 2 delivers the first complete booking-and-approval workflow before manager CRUD.
@@ -187,7 +198,7 @@ Stop at every stage checkpoint. Passing a stage does not authorize the next stag
 
 Use [TEST_PARITY.md](TEST_PARITY.md) for per-scenario migration tracking. Domain tests use plain xUnit; application tests use controlled time and small doubles; integration tests use migrated SQLite files and WebApplicationFactory with actual Identity cookies/forms/antiforgery. Never use EF InMemory to prove SQLite behavior. Verify exact fee/timestamp mappings, subtype materialization, constraints, translations, object isolation and snapshots. Provider-specific Java assertions must be replaced, not copied blindly.
 
-Concurrency evidence includes independent contexts/connections and separate processes against one file, deterministic synchronization, final committed invariants and bounded lock failure. Each stage includes relevant checks. Final verification adds full suite, locked restore, dependency review, Release publish, persistent restart and browser/local-assets rehearsal. Record only commands/results actually executed; C# results currently do not exist.
+Stage 2 booking concurrency evidence uses independent contexts/connections and separate Kestrel processes against one file, synchronized starts, committed invariants, actual busy/rollback and stale-tracker tests. Stage 3 adds ten configuration/booking race cases, busy configuration HTTP handling and atomic Identity/profile failure tests. Stage 4 adds final review/publish/presentation rehearsal when authorized. Report only executed commands and their limits; 191 current C# tests are separate from the historical 118 Java cases.
 
 Demo mode is explicit and disabled elsewhere. Seed a one-branch clinic and two-branch hospital, doctor/non-doctor employees, 30/45/20-minute synthetic services, two patients and separate scoped managers. Initial dates start tomorrow and span fourteen days from TimeProvider. Use a stable seed marker independent of editable names; do not recreate or move saved reservations on restart. Document an explicit aged-demo reset/extension procedure.
 
@@ -210,6 +221,6 @@ The deadline is unconfirmed. These are relative actual workdays, possibly noncon
 | 9 | Turkish UI, security and regression review. |
 | 10 | Parity audit, packaged rehearsal and presentation evidence. |
 
-Only the single Stage 0 initial commit/push is currently authorized. Later workdays and commits require their own authorization. Do not split already completed work later to imply earlier development. Verify SABIS/presentation dates, selection record and group obligations separately.
+The single Stage 0 commit/push is complete. Stages 1–3 are explicitly uncommitted; further commits/pushes and stages require authorization. All work so far occurred on 26 October 2026, one actual development date. Never change dates to imply otherwise. The ten-day table is a possible future allocation of meaningful work, not a record of ten elapsed days. Verify SABIS/presentation dates, selection record and group obligations separately.
 
 Sources supporting technical decisions: [SQLite provider limitations](https://learn.microsoft.com/en-us/ef/core/providers/sqlite/limitations), [EF transactions](https://learn.microsoft.com/en-us/ef/core/saving/transactions), [xUnit package](https://www.nuget.org/packages/xunit.v3/3.2.2), and the official NuGet flat-container manifests checked during planning. This document describes approved intent; future verification records must distinguish implementation from proposal.

@@ -1,6 +1,6 @@
 # Hospital/Clinic Appointment System — C# requirements
 
-Status: design approved; **Stage 0 only authorized**. Planning baseline: 26 October 2026, Europe/Istanbul. No application implementation or C# test execution is claimed.
+Status: Stages 0–2 accepted; **Stage 3 hospital/clinic management is authorized and implemented**. Baseline: 26 October 2026, Europe/Istanbul. Actual results are in docs/STAGE3_VERIFICATION.md. Stage 4 remains unauthorized; no commit/push is authorized.
 
 ## Sources and authority
 
@@ -30,7 +30,7 @@ Classification: **T** = written teacher requirement; **R** = teacher recommendat
 | T12 | Save procedure, duration, fee, employee and date/time; P22 | Persist/reload details and immutable booked snapshots. |
 | T13 | Appointment approval mechanism; P23 | Assigned staff or scoped manager approves/rejects pending bookings, with decision audit. |
 
-All entries describe target acceptance, **not completed C# features**. General examination, radiology and laboratory are examples in the source, not a prescribed exhaustive catalog.
+The table defines acceptance targets. Stage 3 coverage is summarized below. General examination, radiology and laboratory are examples in the source, not a prescribed exhaustive catalog.
 
 ## Delivery and presentation obligations
 
@@ -59,7 +59,7 @@ R01: the teacher **recommends** at least three role groups in P25. PATIENT, STAF
 - U07: synthetic data only, professional accessible local UI, reproducible classroom demo and future initial demo dates.
 - U08: incremental stages with explicit approval at every checkpoint. Deliver core booking and approval before complete manager configuration.
 - U09: never modify, delete, overwrite or run write-producing operations in the Java reference directory.
-- U10: Stage 0 may save the five planning documents, initialize Git, add .gitignore, verify the target/new account, review staged content, and create/push **one genuine initial commit**. All subsequent commits/pushes need fresh explicit authorization. Stage 1 is not authorized.
+- U10: Stages 0–2 are accepted, including the genuine initial commit and the 113-test booking baseline. Stage 3 alone is authorized: scoped hospital/clinic/branch/department/service/staff/specialty/offering/hours/availability management, optional new staff Identity accounts, safe configuration changes, Turkish pages, and real SQLite configuration races. Preserve all 113 tests, transparently adapting obsolete stage-boundary assertions. **No commits or pushes are authorized.** Stop before Stage 4.
 
 Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csharp.git`. Verify that the authenticated Git transport account is `tk612536-ops` before committing/pushing; the old account is not acceptable.
 
@@ -71,7 +71,7 @@ Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csha
 | A02 | Appointment intervals are half-open [start, end). Entire duration must fit continuous opening and branch-specific employee availability; adjacent windows merge, positive gaps do not. |
 | A03 | Employee conflicts span all branches; patient conflicts span the application. Pending and Approved reserve time; Rejected releases it. |
 | A04 | Pending → Approved or Pending → Rejected only. Assigned employee or facility-granted manager decides once, recording actor and time. No cancellation, expiry or rescheduling workflow. |
-| A05 | Derive fee/duration/end and actor identity on the server. Preserve service/staff names, duration, fee and currency snapshots. Reject stale displayed catalog terms. |
+| A05 | Derive fee/duration/end and actor identity on the server. Preserve service/staff names, duration, fee and currency snapshots. Reject stale displayed catalog terms. Facility/branch names and professional descriptions remain current relational labels, not additional historical snapshots. |
 | A06 | One employing facility per employee, one primary specialty per doctor; immutable offering links define employee/service eligibility and branch assignment. |
 | A07 | Dated staff availability must fit opening hours and must not overlap other shifts for that employee, including across branches. |
 | A08 | Schedule edits protect future/ongoing Pending and Approved booked intervals using snapshot duration. Opening edits also protect future shifts. Deactivate referenced staff/services/offerings instead of deleting history. |
@@ -87,4 +87,6 @@ Payments, medical records/diagnosis, prescriptions, messaging, public registrati
 
 External questions remain: submission/presentation dates, SABIS format, selection status, group members and any further course instructions. They do not authorize invented dates or block Stage 0 documentation.
 
-See [approved implementation plan](docs/PLAN.md), [SQLite design](docs/CONCURRENCY.md), [test parity](docs/TEST_PARITY.md) and [active agent instructions](AGENTS.md). C# application requirements remain unimplemented until their stages are authorized and verified.
+See [approved implementation plan](docs/PLAN.md), [SQLite implementation](docs/CONCURRENCY.md), [test parity](docs/TEST_PARITY.md), [Stage 3 evidence](docs/STAGE3_VERIFICATION.md) and [agent instructions](AGENTS.md).
+
+Stages 1–3 implement T01–T13: the layered OOP system supports manager-created single/multi-branch hospitals and clinics, departments, exact service terms, both staff types, specialties, offerings, multiple weekly opening periods and dated availability. The newly configured catalog feeds patient booking and new staff approval. Application services enforce manager grants and child scope, use the same immediate-writer protocol, and protect future/ongoing Pending/Approved intervals on schedule edits. Service/staff/offering deactivation retains history and existing decision access. The 191-test suite and live restarted workflow provide evidence; final presentation, broader parity/accessibility review and submission obligations remain Stage 4 or external work.

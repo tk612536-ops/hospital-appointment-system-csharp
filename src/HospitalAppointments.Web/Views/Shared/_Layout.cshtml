@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Klinik Randevu</title>
+    <link rel="icon" href="~/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="~/vendor/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#main-content">İçeriğe geç</a>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark" aria-hidden="true">+</span> Klinik Randevu</a>
+            <nav class="main-nav" aria-label="Ana menü">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Workspace" asp-action="Index">Çalışma alanım</a>
+                    @if (User.IsInRole(RoleNames.Patient)) { <a href="/patient">Hasta alanı</a><a href="/patient/book">Randevu al</a><a href="/patient/appointments">Randevularım</a> }
+                    @if (User.IsInRole(RoleNames.Staff)) { <a href="/staff">Personel alanı</a> }
+                    @if (User.IsInRole(RoleNames.Manager)) { <a href="/manager">Yönetici alanı</a><a href="/manager/facilities">Kurum yönetimi</a> }
+                    @if (User.IsInRole(RoleNames.Staff) || User.IsInRole(RoleNames.Manager)) { <a href="/work/appointments">Randevu değerlendirme</a> }
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        <button class="btn btn-outline-primary btn-sm" type="submit">Çıkış yap</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="Index">Ana sayfa</a>
+                    <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Login">Giriş yap</a>
+                }
+            </nav>
+        </div>
+    </header>
+    <main id="main-content" class="container main-content" tabindex="-1">
+        @RenderBody()
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-inner"><span>Klinik Randevu · Üniversite OOP projesi</span><span>Gösterim verileri kurgusaldır.</span></div>
+    </footer>
+</body>
+</html>

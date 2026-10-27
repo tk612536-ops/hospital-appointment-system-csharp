@@ -1,0 +1,25 @@
+@model HospitalAppointments.Application.Contracts.AppointmentView
+@{ ViewData["Title"] = "Randevu ayrıntıları"; }
+<section class="page-intro"><p class="eyebrow">RANDEVU #@Model.Id</p><h1>@AppointmentLabels.For(Model.Status)</h1><p>Randevunuzun kayıtlı ayrıntıları ve güncel değerlendirme durumu.</p></section>
+@if (TempData["Message"] is string message) { <p class="alert alert-success" role="status">@message</p> }
+<section class="workspace-panel">
+    <dl class="row">
+        <dt class="col-sm-4">Hasta</dt><dd class="col-sm-8">@Model.PatientName</dd>
+        <dt class="col-sm-4">Hizmet</dt><dd class="col-sm-8">@Model.ServiceName</dd>
+        <dt class="col-sm-4">Çalışan</dt><dd class="col-sm-8">@Model.StaffName · @Model.ProfessionalDescription</dd>
+        <dt class="col-sm-4">Kurum / şube</dt><dd class="col-sm-8">@Model.Facility / @Model.Branch</dd>
+        <dt class="col-sm-4">Tarih</dt><dd class="col-sm-8">@Model.Start.ToString("dd MMMM yyyy")</dd>
+        <dt class="col-sm-4">Saat</dt><dd class="col-sm-8">@Model.Start.ToString("HH:mm") – @Model.End.ToString("HH:mm") (Türkiye)</dd>
+        <dt class="col-sm-4">Kayıtlı süre / ücret</dt><dd class="col-sm-8">@Model.DurationMinutes dakika · @Model.Fee.ToString("N2") @Model.Currency</dd>
+    </dl>
+    @if (Model.DecidedAt is not null) { <p class="text-secondary">Karar zamanı: @Model.DecidedAt.Value.ToString("dd MMMM yyyy HH:mm") (Türkiye)</p> }
+    @if (Model.CanDecide)
+    {
+        <form asp-controller="Appointment" asp-action="Decide" asp-route-id="@Model.Id" method="post" class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary" name="decision" value="Approved" type="submit">Onayla</button>
+            <button class="btn btn-outline-danger" name="decision" value="Rejected" type="submit">Reddet</button>
+        </form>
+    }
+    <p class="coming-note">Kayıtlı süre ve ücret, hizmetin güncel koşulları değişse bile korunur. Reddedilen randevuların saatleri serbest bırakılır.</p>
+</section>
+<p class="mt-4"><a href="/workspace">Çalışma alanıma dön →</a></p>

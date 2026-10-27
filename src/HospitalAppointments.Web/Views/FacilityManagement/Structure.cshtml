@@ -1,0 +1,42 @@
+@model ManagementPage
+@{ ViewData["Title"] = "Şubeler ve bölümler"; var root = "/manager/facilities/" + Model.Facility.Id; }
+<partial name="_ManagementNavigation" model="Model" />
+<div class="row g-4">
+    <section class="col-lg-6"><div class="management-card"><h2>Kurum bilgileri</h2>
+        <form action="@root" method="post" asp-antiforgery="true" class="form-stack">
+            <div><label for="facility-name" class="form-label">Kurum adı</label><input id="facility-name" name="Name" value="@Model.Facility.Name" class="form-control" maxlength="255" required /></div>
+            <div><label for="facility-type" class="form-label">Kurum türü</label><select id="facility-type" name="Type" class="form-select"><option value="Hospital" selected="@(Model.Facility.Type == FacilityType.Hospital)">Hastane</option><option value="Clinic" selected="@(Model.Facility.Type == FacilityType.Clinic)">Klinik</option></select></div>
+            <button class="btn btn-primary" type="submit">Kurum bilgilerini kaydet</button>
+        </form>
+    </div></section>
+    <section class="col-lg-6"><div class="management-card"><h2>Yeni şube</h2><p>Tek şubeyle başlayabilir veya birden fazla şube yönetebilirsiniz.</p>
+        <form action="@root/branches" method="post" asp-antiforgery="true" class="form-stack">
+            <div><label for="new-branch" class="form-label">Şube adı</label><input id="new-branch" name="Name" class="form-control" maxlength="255" required /></div>
+            <button class="btn btn-primary" type="submit">Şube ekle</button>
+        </form>
+    </div></section>
+    <section class="col-lg-6"><div class="management-card"><h2>Şubeler</h2>
+        @foreach (var branch in Model.Branches)
+        {
+            <form action="@root/branches/@branch.Id" method="post" asp-antiforgery="true" class="border-bottom py-3">
+                <label for="branch-@branch.Id" class="form-label">Şube adı</label><div class="d-flex gap-2"><input id="branch-@branch.Id" name="Name" value="@branch.Name" class="form-control" maxlength="255" required /><button class="btn btn-outline-primary" type="submit">Kaydet</button></div>
+            </form>
+        }
+    </div></section>
+    <section class="col-lg-6"><div class="management-card"><h2>Yeni bölüm</h2>
+        <form action="@root/departments" method="post" asp-antiforgery="true" class="form-stack">
+            <div><label for="department-branch" class="form-label">Şube</label><select id="department-branch" name="BranchId" class="form-select" required>@foreach (var branch in Model.Branches) { <option value="@branch.Id">@branch.Name</option> }</select></div>
+            <div><label for="department-name" class="form-label">Bölüm adı</label><input id="department-name" name="Name" class="form-control" maxlength="255" required /></div>
+            <button class="btn btn-primary" type="submit">Bölüm ekle</button>
+        </form>
+    </div></section>
+    <section class="col-12"><div class="management-card"><h2>Bölümler</h2><p class="text-secondary">Bir bölüm oluşturulduğu şubeye bağlı kalır; adı değiştirilebilir. Randevu geçmişi korunur.</p>
+        @if (Model.Departments.Count == 0) { <p>Henüz bölüm eklenmedi.</p> }
+        @foreach (var department in Model.Departments)
+        {
+            <form action="@root/departments/@department.Id" method="post" asp-antiforgery="true" class="row g-2 align-items-end border-bottom py-3">
+                <div class="col-md-3"><span class="text-secondary">@department.Branch</span></div><div class="col-md-6"><label for="department-@department.Id" class="form-label">Bölüm adı</label><input id="department-@department.Id" name="Name" value="@department.Name" class="form-control" maxlength="255" required /></div><div class="col-md-3"><button class="btn btn-outline-primary" type="submit">Kaydet</button></div>
+            </form>
+        }
+    </div></section>
+</div>

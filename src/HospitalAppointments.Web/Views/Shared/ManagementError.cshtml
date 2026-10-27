@@ -1,0 +1,3 @@
+@model IReadOnlyList<string>
+@{ ViewData["Title"] = "Bilgileri kontrol edin"; }
+<section class="message-panel"><p class="eyebrow">BİLGİLERİ KONTROL EDİN</p><h1>Değişiklik kaydedilemedi.</h1><ul>@foreach (var error in Model) { <li>@error</li> }</ul><p>Yeni kullanıcı adı ve parola isteğe bağlıdır; kullanacaksanız ikisini birlikte girin. Parola en az 8 karakter, büyük/küçük harf, rakam ve sembol içermelidir.</p><a class="btn btn-primary" href="/manager/facilities">Kurumlarıma dön</a></section>

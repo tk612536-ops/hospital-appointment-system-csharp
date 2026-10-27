@@ -1,0 +1,18 @@
+@{ ViewData["Title"] = "Ana sayfa"; }
+<section class="hero">
+    <p class="eyebrow">HASTANE / KLİNİK RANDEVU SİSTEMİ</p>
+    <h1>Sağlık hizmetlerine<br />düzenli bir başlangıç.</h1>
+    <p class="lead">Kurum ve hizmetinizi seçin, uygun bir randevu alın ve onay durumunu takip edin. Hasta, sağlık personeli ve yönetici için ayrı çalışma alanları.</p>
+    <div class="d-flex gap-3 flex-wrap align-items-center">
+        @if (User.Identity?.IsAuthenticated == true)
+        { <a class="btn btn-primary" href="/workspace">Çalışma alanıma git <span aria-hidden="true">→</span></a> }
+        else
+        { <a class="btn btn-primary" href="/account/login">Hesabınıza giriş yapın <span aria-hidden="true">→</span></a> }
+        <span class="phase-label">Randevu, onay ve kurum yönetimi</span>
+    </div>
+</section>
+<section class="row g-4" aria-label="Çalışma alanları">
+    <div class="col-md-4"><article class="feature-card"><span class="card-number">01</span><h2>Hasta</h2><p>Uygun saatlerden randevu alın ve kayıtlı ayrıntılarınızı görün.</p><p class="coming-note">Onay bekleyen ve geçmiş randevularınızı aynı yerden takip edin.</p></article></div>
+    <div class="col-md-4"><article class="feature-card"><span class="card-number">02</span><h2>Sağlık personeli</h2><p>Size atanmış randevuları güvenli çalışma alanınızda inceleyin.</p><p class="coming-note">Randevuları onaylayın veya reddedin; hasta güncel sonucu görsün.</p></article></div>
+    <div class="col-md-4"><article class="feature-card"><span class="card-number">03</span><h2>Yönetici</h2><p>Hastane ve kliniklerinizi şubeleriyle birlikte yönetin.</p><p class="coming-note">Hizmetleri, çalışan atamalarını ve güvenli çalışma takvimlerini düzenleyin.</p></article></div>
+</section>

@@ -1,0 +1,38 @@
+@model BookingInput
+@{ ViewData["Title"] = "Randevu al"; var booking = Model.Page!; }
+<section class="page-intro"><p class="eyebrow">HASTA / RANDEVU</p><h1>Size uygun zamanı seçin.</h1><p>Kurum, şube ve hizmetinizi belirleyin. Tüm işlem süresine uygun saatler aşağıda listelenir.</p></section>
+<div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+@if (booking.Facilities.Count == 0)
+{ <p class="notice">Şu anda randevuya açık hizmet bulunmuyor.</p> }
+else
+{
+    <form method="get" action="/patient/book" class="feature-card mb-4">
+        <div class="row g-3">
+            <div class="col-md-6"><label class="form-label" for="facility">Kurum</label><select id="facility" name="facilityId" class="form-select" onchange="this.form.submit()">@foreach (var choice in booking.Facilities) { <option value="@choice.Id" selected="@(choice.Id == booking.FacilityId)">@choice.Label</option> }</select></div>
+            <div class="col-md-6"><label class="form-label" for="branch">Şube</label><select id="branch" name="branchId" class="form-select" onchange="this.form.submit()">@foreach (var choice in booking.Branches) { <option value="@choice.Id" selected="@(choice.Id == booking.BranchId)">@choice.Label</option> }</select></div>
+            <div class="col-md-6"><label class="form-label" for="service">Hizmet</label><select id="service" name="serviceId" class="form-select" onchange="this.form.submit()">@foreach (var choice in booking.Services) { <option value="@choice.Id" selected="@(choice.Id == booking.ServiceId)">@choice.Label</option> }</select></div>
+            <div class="col-md-6"><label class="form-label" for="employee">Çalışan</label><select id="employee" name="offeringId" class="form-select">@foreach (var choice in booking.Staff) { <option value="@choice.Id" selected="@(choice.Id == booking.OfferingId)">@choice.Label</option> }</select></div>
+            <div class="col-md-6"><label class="form-label" for="date">Tarih</label><input id="date" name="date" type="date" value="@booking.Date.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" class="form-control" required /></div>
+            <div class="col-md-6 d-flex align-items-end"><button class="btn btn-primary w-100" type="submit">Uygun saatleri göster</button></div>
+        </div>
+    </form>
+    <section class="workspace-panel" aria-labelledby="times-heading">
+        <h2 id="times-heading">Uygun başlangıç saatleri</h2>
+        <p><strong>@booking.DurationMinutes dakika</strong> · <strong>@booking.Fee.ToString("N2") @booking.Currency</strong> · @booking.Date.ToString("dd MMMM yyyy")</p>
+        <p class="text-secondary">Saatler Türkiye saatidir. Seçtiğiniz saat, onay beklerken sizin için ayrılır.</p>
+        @if (booking.Starts.Count == 0) { <p class="notice">Bu seçim için uygun saat bulunmuyor. Farklı bir tarih veya çalışan seçebilirsiniz.</p> }
+        <div class="d-flex flex-wrap gap-2">
+        @foreach (var start in booking.Starts)
+        {
+            <form action="/patient/book" method="post" asp-antiforgery="true">
+                <input type="hidden" name="OfferingId" value="@booking.OfferingId" />
+                <input type="hidden" name="Date" value="@booking.Date.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                <input type="hidden" name="StartTime" value="@start.ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture)" />
+                <input type="hidden" name="CatalogVersion" value="@booking.CatalogVersion" />
+                <button type="submit" class="btn btn-outline-primary" aria-label="@($"{start:HH:mm} saatinde {booking.DurationMinutes} dakikalık randevu al")">@start.ToString("HH:mm")</button>
+            </form>
+        }
+        </div>
+    </section>
+}
+<p class="mt-4"><a href="/patient/appointments">Randevularımı görüntüle →</a></p>
