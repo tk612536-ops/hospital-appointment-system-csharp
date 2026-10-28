@@ -3,6 +3,7 @@
 <section class="page-intro"><p class="eyebrow">RANDEVU #@Model.Id</p><h1>@AppointmentLabels.For(Model.Status)</h1><p>Randevunuzun kayıtlı ayrıntıları ve güncel değerlendirme durumu.</p></section>
 @if (TempData["Message"] is string message) { <p class="alert alert-success" role="status">@message</p> }
 <section class="workspace-panel">
+    <p><span class="status-badge @AppointmentLabels.CssFor(Model.Status)">@AppointmentLabels.For(Model.Status)</span></p>
     <dl class="row">
         <dt class="col-sm-4">Hasta</dt><dd class="col-sm-8">@Model.PatientName</dd>
         <dt class="col-sm-4">Hizmet</dt><dd class="col-sm-8">@Model.ServiceName</dd>
@@ -22,4 +23,8 @@
     }
     <p class="coming-note">Kayıtlı süre ve ücret, hizmetin güncel koşulları değişse bile korunur. Reddedilen randevuların saatleri serbest bırakılır.</p>
 </section>
-<p class="mt-4"><a href="/workspace">Çalışma alanıma dön →</a></p>
+<p class="mt-4 d-flex flex-wrap gap-3">
+    @if (User.IsInRole(RoleNames.Patient)) { <a href="/patient/appointments">Randevularım →</a> }
+    @if (User.IsInRole(RoleNames.Staff) || User.IsInRole(RoleNames.Manager)) { <a href="/work/appointments">Randevu değerlendirme →</a> }
+    <a href="/workspace">Çalışma alanıma dön →</a>
+</p>

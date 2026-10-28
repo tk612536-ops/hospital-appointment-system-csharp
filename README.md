@@ -2,7 +2,9 @@
 
 University Object-Oriented Programming project using C#/.NET 10, ASP.NET Core MVC, EF Core/SQLite, ASP.NET Core Identity, Razor Views and local Bootstrap. UI text is Turkish; code and technical documentation are English.
 
-**Stages 1–3 are implemented.** Patients can select an eligible employee/service, reserve a valid appointment and follow its approval status. Assigned staff and scoped managers can approve/reject. Managers can create and edit hospitals/clinics, branches, departments, services, doctors/healthcare staff, specialties, service assignments, opening hours and dated availability. Configuration edits preserve existing reservations and history. The OOP model includes the real StaffMember/Doctor/HealthcareStaff hierarchy. The professor's C# instruction governs this rebuild; the separate Java reference remains untouched. **Stop at Stage 3: Stage 4 and further commits/pushes require approval.**
+**Stages 1–4 are implemented and reviewed.** Patients book eligible employee/service intervals and follow their approval status. Assigned staff and scoped managers approve/reject. Managers configure hospitals/clinics, branches, departments, services, both staff types, specialties, offerings, hours and dated availability. Configuration changes preserve reservations/history. The abstract StaffMember hierarchy and layered architecture remain intact. The professor's C# instruction governs this rebuild; the Java reference is untouched.
+
+The Stage 1–3 checkpoint is [abebdb2](https://github.com/tk612536-ops/hospital-appointment-system-csharp/commit/abebdb2d0142ea883af83aa1475b385874d22e79). **This checkpoint includes the completed Stage 4 improvements and documentation, authorized for publication on 28 October 2026 after independent source review.** The last executed full suite, on 27 October, has **197 passing tests**, with all 191 accepted cases preserved; this Git-only checkpoint does not claim a new test run. See [verification](docs/STAGE4_VERIFICATION.md), [teacher audit](docs/REQUIREMENTS_AUDIT.md), [architecture review](docs/ARCHITECTURE_REVIEW.md), [Turkish presentation guide](docs/PRESENTATION_GUIDE_TR.md), and [another-Windows-computer setup/delivery](docs/RUN_ON_WINDOWS.md).
 
 ## Run on Windows
 
@@ -28,6 +30,8 @@ dotnet run --no-launch-profile --project src/HospitalAppointments.Web -- --envir
 ```
 
 Open [https://localhost:7143](https://localhost:7143). HTTP port 5143 redirects to HTTPS. HTTPS is required because authentication and antiforgery cookies are Secure. Do not disable browser certificate warnings; trust the development certificate instead. Initial dependencies need network access; runtime CSS and fonts do not require a CDN. Stop the foreground application with Ctrl+C.
+
+Stop a running application before rebuilding on Windows, to avoid locked DLLs. The Stage 4 live rehearsal uses a separate published folder/database; see the verification report rather than assuming its observed appointment IDs belong to the source default database.
 
 ## Synthetic demo accounts
 
@@ -70,6 +74,8 @@ It creates schema and roles, but no users. Public registration/account administr
 9. Restart with the same database: bookings, decisions, IDs and future shifts remain. Management edits preserve booked service/staff names, duration, fee and currency. Facility/branch names and professional descriptions remain current linked labels.
 
 All times are Europe/Istanbul. The start grid is 15 minutes, durations need not be multiples of it, and intervals are half-open. Full continuous coverage is required in both opening hours and matching branch availability. Employee overlaps span branches; patient overlaps span the application. Rejected appointments release time; there is no cancellation/rescheduling/expiry workflow.
+
+Booking selection is keyboard-friendly and explicit: after changing a parent institution/branch/service, press **Uygun saatleri göster** to refresh dependent choices and starts. Changing an option does not automatically navigate. The skip link targets main content; forms have labels, statuses retain text alongside color, and wide tables scroll within focusable regions on narrow screens. Native date/time controls can follow the browser's own format.
 
 ## Manual manager-to-patient walkthrough
 
@@ -118,6 +124,6 @@ The design-time factory uses the default local database and never seeds users. F
 
 ## Verification and stage boundaries
 
-See [Stage 3 verification](docs/STAGE3_VERIFICATION.md) for actual restore/build/191-test results, live workflow and limitations. Stage 1/2 verification reports remain historical records. [Test parity](docs/TEST_PARITY.md) distinguishes reference scenarios from executed C# tests; the original 118 Java tests are not claimed as C# results.
+See [Stage 4 verification](docs/STAGE4_VERIFICATION.md) for restore/build/**197-test** results, migration consistency, Release publish, browser/keyboard checks and the published workflow/restart. Stage 1/2/3 reports remain historical. [Test parity](docs/TEST_PARITY.md) maps all 118 historical Java execution rows to actual C# equivalents/adaptations; Java tests were not rerun and the counts are not interchangeable.
 
-[Requirements](REQUIREMENTS.md), [plan](docs/PLAN.md), [booking concurrency](docs/CONCURRENCY.md) and [agent instructions](AGENTS.md) remain authoritative. Stage 4 and further commits/pushes require explicit approval. The initial Stage 0 history is preserved; Stages 1–3 remain local, uncommitted work. Ten genuine development days are still a course obligation; one date of implementation does not satisfy that requirement.
+[Requirements](REQUIREMENTS.md), [plan](docs/PLAN.md), [booking concurrency](docs/CONCURRENCY.md) and [agent instructions](AGENTS.md) describe the approved implementation. Their dated verification/status notes preserve the state at those checkpoints; the 28 October authorization supersedes the former instruction to leave Stage 4 uncommitted. Local archives under ignored `artifacts` retain the 27 October rehearsal snapshot and hashes; they are not SABIS uploads. This publication adds one genuine Stage 4 checkpoint to the existing 26/27 October commits, without backdating. The ten-day history requirement and SABIS deadline/receipt, selection status, contributors and presentation attendance remain owner/course obligations. **No further development or commit/push is authorized.**

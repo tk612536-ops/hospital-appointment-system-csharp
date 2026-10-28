@@ -3,7 +3,9 @@
 @if (Model.Count == 0) { <p class="notice">Henüz listelenecek randevu bulunmuyor.</p> }
 else
 {
-    <div class="table-responsive feature-card"><table class="table align-middle"><caption>Randevu tarihi, hizmet, çalışan ve güncel durum</caption><thead><tr><th scope="col">Tarih / saat</th><th scope="col">Hizmet</th><th scope="col">Çalışan</th><th scope="col">Durum</th><th scope="col">Ayrıntı</th></tr></thead><tbody>
-    @foreach (var row in Model) { <tr><td>@row.Start.ToString("dd.MM.yyyy HH:mm")</td><td>@row.ServiceName<br /><small>@row.Facility / @row.Branch</small></td><td>@row.StaffName</td><td>@AppointmentLabels.For(row.Status)</td><td><a href="/appointments/@row.Id" aria-label="Randevu @row.Id ayrıntıları">Görüntüle →</a></td></tr> }
+    <div class="table-responsive feature-card" tabindex="0" role="region" aria-label="Randevu listesi; dar ekranda yatay kaydırabilirsiniz"><table class="table appointment-table align-middle"><caption>Randevu tarihi, hizmet, çalışan ve güncel durum</caption><thead><tr><th scope="col">Tarih / saat</th><th scope="col">Hizmet</th><th scope="col">Çalışan</th><th scope="col">Durum</th><th scope="col">Ayrıntı</th></tr></thead><tbody>
+    @foreach (var row in Model) { <tr><td>@row.Start.ToString("dd.MM.yyyy HH:mm")</td><td>@row.ServiceName<br /><small>@row.Facility / @row.Branch</small></td><td>@row.StaffName</td><td><span class="status-badge @AppointmentLabels.CssFor(row.Status)">@AppointmentLabels.For(row.Status)</span></td><td><a href="/appointments/@row.Id" aria-label="Randevu @row.Id ayrıntıları">Görüntüle →</a></td></tr> }
     </tbody></table></div>
+}
+@if (User.IsInRole(RoleNames.Patient)) { <p class="mt-4"><a class="btn btn-primary" href="/patient/book">Yeni randevu al</a></p>
 }

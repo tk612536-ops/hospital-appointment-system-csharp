@@ -1,6 +1,6 @@
 # SQLite booking and configuration concurrency
 
-Status: **booking, decisions and configuration implemented and tested through Stage 3**, 26 October 2026. Separate-connection/process booking evidence is in STAGE2_VERIFICATION.md; configuration races, Identity atomicity and HTTP evidence are in STAGE3_VERIFICATION.md. Java's H2 tests are not SQLite evidence.
+Status: **booking, decisions and configuration implemented through Stage 3 and reviewed/retested in Stage 4**, 27 October 2026. The immediate-writer adapter/application transaction protocol is unchanged. Historical separate-connection/process proof is in STAGE2_VERIFICATION.md; configuration/Identity proof is in STAGE3_VERIFICATION.md; final 197-test/published restart evidence is in STAGE4_VERIFICATION.md. Java's H2 tests are not SQLite evidence.
 
 ## Problem and preserved rules
 

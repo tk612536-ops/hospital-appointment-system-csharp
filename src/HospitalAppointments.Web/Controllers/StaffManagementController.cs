@@ -21,26 +21,30 @@ public sealed class StaffManagementController(StaffManagementService management,
     [HttpPost("doctors")]
     public async Task<IActionResult> Doctor(long facilityId, StaffRegisterInput input, CancellationToken token)
     {
-        if (!ModelState.IsValid || input.SpecialtyId is not > 0) return ManagementFeedback.Invalid(this);
-        await management.RegisterDoctorAsync(facilityId, input.Name, input.SpecialtyId.Value, input.Username, input.Password, token); return Back(facilityId);
+        if (input.SpecialtyId is not > 0) ModelState.AddModelError(nameof(input.SpecialtyId), "Doktor için bir uzmanlık seçin.");
+        if (!ModelState.IsValid) return ManagementFeedback.Invalid(this);
+        await management.RegisterDoctorAsync(facilityId, input.Name, input.SpecialtyId!.Value, input.Username, input.Password, token); return Back(facilityId);
     }
     [HttpPost("healthcare")]
     public async Task<IActionResult> Healthcare(long facilityId, StaffRegisterInput input, CancellationToken token)
     {
-        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(input.JobTitle)) return ManagementFeedback.Invalid(this);
-        await management.RegisterHealthcareStaffAsync(facilityId, input.Name, input.JobTitle, input.Username, input.Password, token); return Back(facilityId);
+        if (string.IsNullOrWhiteSpace(input.JobTitle)) ModelState.AddModelError(nameof(input.JobTitle), "Sağlık personeli için meslek / görev girin.");
+        if (!ModelState.IsValid) return ManagementFeedback.Invalid(this);
+        await management.RegisterHealthcareStaffAsync(facilityId, input.Name, input.JobTitle!, input.Username, input.Password, token); return Back(facilityId);
     }
     [HttpPost("doctors/{id:long}")]
     public async Task<IActionResult> UpdateDoctor(long facilityId, long id, StaffEditInput input, CancellationToken token)
     {
-        if (!ModelState.IsValid || input.SpecialtyId is not > 0) return ManagementFeedback.Invalid(this);
-        await management.UpdateDoctorAsync(facilityId, id, input.Name, input.SpecialtyId.Value, input.Active, token); return Back(facilityId);
+        if (input.SpecialtyId is not > 0) ModelState.AddModelError(nameof(input.SpecialtyId), "Doktor için bir uzmanlık seçin.");
+        if (!ModelState.IsValid) return ManagementFeedback.Invalid(this);
+        await management.UpdateDoctorAsync(facilityId, id, input.Name, input.SpecialtyId!.Value, input.Active, token); return Back(facilityId);
     }
     [HttpPost("healthcare/{id:long}")]
     public async Task<IActionResult> UpdateHealthcare(long facilityId, long id, StaffEditInput input, CancellationToken token)
     {
-        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(input.JobTitle)) return ManagementFeedback.Invalid(this);
-        await management.UpdateHealthcareStaffAsync(facilityId, id, input.Name, input.JobTitle, input.Active, token); return Back(facilityId);
+        if (string.IsNullOrWhiteSpace(input.JobTitle)) ModelState.AddModelError(nameof(input.JobTitle), "Sağlık personeli için meslek / görev girin.");
+        if (!ModelState.IsValid) return ManagementFeedback.Invalid(this);
+        await management.UpdateHealthcareStaffAsync(facilityId, id, input.Name, input.JobTitle!, input.Active, token); return Back(facilityId);
     }
     [HttpPost("offerings")]
     public async Task<IActionResult> Assign(long facilityId, OfferingInput input, CancellationToken token)

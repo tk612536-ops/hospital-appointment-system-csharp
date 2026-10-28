@@ -1,3 +1,18 @@
 @model IReadOnlyList<string>
-@{ ViewData["Title"] = "Bilgileri kontrol edin"; }
-<section class="message-panel"><p class="eyebrow">BİLGİLERİ KONTROL EDİN</p><h1>Değişiklik kaydedilemedi.</h1><ul>@foreach (var error in Model) { <li>@error</li> }</ul><p>Yeni kullanıcı adı ve parola isteğe bağlıdır; kullanacaksanız ikisini birlikte girin. Parola en az 8 karakter, büyük/küçük harf, rakam ve sembol içermelidir.</p><a class="btn btn-primary" href="/manager/facilities">Kurumlarıma dön</a></section>
+@{
+    ViewData["Title"] = "Bilgileri kontrol edin";
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var destination = "/manager/facilities";
+    if (long.TryParse(ViewContext.RouteData.Values["facilityId"]?.ToString(), out var facilityId) && facilityId > 0)
+    {
+        destination += "/" + facilityId;
+        destination += controller switch { "StaffManagement" => "/staff", "CatalogManagement" => "/services", "ScheduleManagement" => "/schedule", _ => "" };
+    }
+}
+<section class="message-panel" aria-labelledby="management-error-heading">
+    <p class="eyebrow">BİLGİLERİ KONTROL EDİN</p><h1 id="management-error-heading">Değişiklik kaydedilemedi.</h1>
+    <div class="alert alert-danger" role="alert"><ul class="mb-0">@foreach (var error in Model) { <li>@error</li> }</ul></div>
+    <p>Kaydedilmiş bilgileriniz korunur. İlgili sayfaya dönerek alanları kontrol edin; henüz kaydedilmemiş girişleri yeniden yazmanız gerekebilir.</p>
+    @if (controller == "StaffManagement") { <p>Yeni kullanıcı adı ve parola isteğe bağlıdır; kullanacaksanız ikisini birlikte girin. Parola en az 8 karakter, büyük/küçük harf, rakam ve simge içermelidir.</p> }
+    <a class="btn btn-primary" href="@destination">İlgili sayfaya dön</a> <a class="ms-3" href="/manager/facilities">Kurumlarım</a>
+</section>

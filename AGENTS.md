@@ -3,9 +3,8 @@
 ## Authorization and reference protection
 
 - Build the university Hospital/Clinic Appointment System in C#/.NET 10. Read REQUIREMENTS.md, docs/PLAN.md, docs/CONCURRENCY.md and docs/TEST_PARITY.md.
-- Stages 0–3 are accepted. On 27 October 2026 the owner authorized **one genuine Stage 1–3 checkpoint commit and push to existing main** after reviewing Git hygiene and verifying Git transport account/remote. Use the actual time, preserve initial history, never force-push. If push fails, stop and explain.
-- **Only after that checkpoint is successfully pushed and verified**, Stage 4 is authorized: teacher-requirements/OOP/architecture/security review, necessary fixes, Turkish responsive/accessibility improvements, final tests and Release publish, Turkish presentation guide and Windows delivery documentation. Preserve all 191 existing tests. Do not implement unrelated features.
-- No additional commit or push is authorized beyond that single checkpoint. Stop after Stage 4 verification/reporting. Preserve the existing initial commit and its actual timestamp.
+- Stages 0–4 are complete and the independent source review is accepted. On **28 October 2026**, the owner authorized **one genuine checkpoint commit and push for the completed Stage 4 improvements and documentation**, on existing main, after inspecting the diff, exclusions and Git transport account. Use the actual current timestamp, preserve existing history and never force-push. If push fails, stop and explain.
+- This authorization covers only that checkpoint and its verification. **No additional development or further commit/push is authorized.** Preserve all 197 passing tests, the SQLite protocol and existing commit timestamps. Stop after reporting the checkpoint SHA, actual local time, branch and remaining changes.
 - The Java project at `C:\Users\muhammed\Desktop\hospital-appointment-system` is a read-only reference. Never edit, delete, reset, migrate, run its application/build/tests, or execute any operation that writes within that directory.
 - Keep C# work under `C:\Users\muhammed\Desktop\hospital-appointment-system-csharp`.
 - Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csharp.git`. Verify the Git transport account is `tk612536-ops`, not the old account, before committing/pushing. Do not overwrite remote history or force-push.
@@ -48,4 +47,5 @@
 ## Current checkpoint evidence
 
 - Stage 3 is accepted. docs/STAGE3_VERIFICATION.md records the actual 191 passing tests (31 domain, 26 application, 134 integration), live manager-created booking/approval and restart evidence. Preserve every existing case.
-- At checkpoint preparation Stages 1–3 are local/uncommitted and the sole Stage 0 commit is preserved. Verify the authorized checkpoint before starting Stage 4; keep all Stage 4 changes uncommitted.
+- The Stage 1–3 checkpoint is abebdb2d0142ea883af83aa1475b385874d22e79, main, actual 27 October 2026 09:54 +03:00. GitHub's complete 164-file tree was verified; the initial commit is its unchanged parent.
+- docs/STAGE4_VERIFICATION.md preserves the historical 27 October results: 197 passing tests (31 domain, 26 application, 140 integration), model consistency, Release publish, published workflow/restart and browser/keyboard checks. Six new tests retain all 191 prior cases. The owner authorized publishing this reviewed Stage 4 source on 28 October; generated archives, databases, logs and screenshots remain ignored local artifacts.

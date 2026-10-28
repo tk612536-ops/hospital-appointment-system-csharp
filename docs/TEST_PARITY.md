@@ -1,6 +1,6 @@
 # Java → C# test parity and verification plan
 
-Status: Stages 1–3 implemented and verified on 26 October 2026. **191 C# tests passed (31 domain, 26 application, 134 integration), zero failures/skips.** The original 113 Stage 1/2 cases remain, with obsolete homepage/route boundary assertions updated; 78 new cases cover Stage 3. Verified rows name actual tests. This is not a claim that 118 unchanged Java tests ran in C# or that the final parity audit is complete.
+Status: Stages 1–4 verified, final review on **27 October 2026**. **197 C# tests passed (31 domain, 26 application, 140 integration), zero failures/skips.** All 191 accepted Stage 1–3 cases remain unchanged in Stage 4; six new meaningful HTTP cases cover the final review. Every historical execution row below has an implemented equivalent/adaptation/provider replacement. This is not a claim that 118 unchanged Java tests ran in C#, that counts are interchangeable, or that finite tests prove every possible deployment correct.
 
 ## Reference evidence and honest baseline
 
@@ -19,7 +19,7 @@ Read-only source: `C:\Users\muhammed\Desktop\hospital-appointment-system\src\tes
 | ManagementIntegrationTest | 28 | Management/HTTP/SQLite integration |
 | AuthenticationIntegrationTest | 13 | Real Identity/MVC integration |
 | NonDemoProfileIntegrationTest | 2 | Non-demo host/time configuration integration |
-| **Total** | **118** | **See per-row implemented/adapted coverage and the explicit partial final-review row** |
+| **Total** | **118** | **See per-row implemented/adapted coverage and provider-specific replacements** |
 
 Retain each behavioral scenario, including every parameterized row. Do not chase an identical test count: one scenario can require multiple C# tests or a provider-specific replacement. Completion means the matrix is resolved with actual C# file/test identifiers, executed evidence and reasons for changes. Do not mark a scenario covered because its proposed name appears here.
 
@@ -164,7 +164,7 @@ The following rows inventory each execution in the existing Java XML reports, in
 | --- | --- | --- | --- | --- |
 | J066 | `unauthorizedConfigurationIsDeniedBeforeAnyWriteLock` | `ManagementScopeTests.UnauthorizedCommandsDoNotAcquireTheDatabaseWriter` | Adapted | Stage 3 verified (adapted where required) |
 | J067 | `anEmptyActiveCatalogIsAUsablePatientPage` | `BookingIntegrationTests.EmptyCatalogAndMalformedPostsRemainUsableAndSafe` | Adapted | Stage 2 verified (adapted where required) |
-| J068 | `rejectedBookingPreservesEmployeeServiceAndDateSelection` | `BookingPersistenceTests.BusyHttpResponseIs503AndPreservesSelectionWithoutSaving` | Adapted | Partial Stage 2; busy/date selection checked; full conflict-selection audit deferred |
+| J068 | `rejectedBookingPreservesEmployeeServiceAndDateSelection` | `FinalReviewIntegrationTests.RejectedBookingPreservesEmployeeServiceBranchFacilityAndDateSelection` | Adapted | Stage 4 verified; real 409 retains facility/branch/service/employee/date and saves no duplicate |
 | J069 | `subtypeEditorCannotChangeAHealthcareEmployeeIntoADoctor` | `ManagementIntegrationTests.DoctorAndHealthcareStaffRemainPolymorphicAndOfferingAssignmentIsIdempotent` | Equivalent | Stage 3 verified (adapted where required) |
 | J070 | `renamedSeedFacilityDoesNotTriggerDuplicateInitialization` | `BookingPersistenceTests.RenamedSeedAndDecidedAppointmentSurviveRestartWithoutMovingDates` | Equivalent | Stage 2 verified (adapted where required) |
 | J071 | `managerInputIsEscapedRatherThanExecutedInTheView` | `ManagementHttpTests.ForgedEditDepartmentCannotRelocateServiceAndManagerTextIsRazorEncoded` | Adapted | Stage 3 verified (adapted where required) |
@@ -231,9 +231,11 @@ The following rows inventory each execution in the existing Java XML reports, in
 | J117 | `injectedClockUsesTheConfiguredClinicTimeZone` | `FoundationIntegrationTests.StartupResolvesServicesAndUsesTheMigratedSqliteSchema` | Adapted | Stage 1 verified (adapted where required) |
 | J118 | `demoSeedingAndDemoAccessAreAbsentOutsideDemoProfile` | `FoundationIntegrationTests.DemoSeedingIsAbsentUnlessEnvironmentAndSettingBothEnableIt` | Adapted | Stage 1 verified (adapted where required) |
 
-Inventory total: **118 historical Java executions; 191 executed C# tests**. Multiple reference rows may share a C# test, so mapping counts are not additive. All 28 management execution rows now link to executed Stage 3 equivalents/adaptations. J068 explicitly retains a partial final-review status: busy handling/date preservation is exercised, while a complete conflict-page selection audit remains for Stage 4. See STAGE3_VERIFICATION.md. No source Java tests were rerun.
+Inventory total: **118 historical Java executions; 197 executed C# tests**. Multiple reference rows may share a C# test, so mapping counts are not additive. All 28 management rows link to executed equivalents/adaptations. Stage 4 resolves the remaining J068 partial status with a real HTTP conflict/selection/persistence regression. The historical stage labels identify when each behavior was implemented; all mapped current C# tests also passed in the final suite. See STAGE4_VERIFICATION.md. No Java tests were rerun.
 
 
 Stage 2 additions beyond Java/H2 remain: native EF/SQLite enlistment before reads, stale tracker refresh, exact integer storage/constraint checks, HTTP 503 with retained selections, and two Kestrel processes sharing one file. H2 row-lock assertions were replaced by SQLite behavior. Stage 3 adds ten actual configuration races, atomic Identity user/role/profile rollback, reauthorization after writer acquisition, full booked-duration preservation, ongoing appointment protection, manager HTTP form binding, Turkish comma-decimal input without implicit thousands grouping, and new configuration/approval persistence across separate host lifetimes. J003's nullable Java role element has no direct non-nullable C# enum equivalent; invalid enum/empty role snapshots are covered without introducing nullable domain roles. J026's local same-day rule belongs to the application timezone boundary rather than a generic UTC interval object.
 
 Stage 3 preserves all 113 prior discovered cases. The public-homepage test now expects implemented management copy instead of the word “later”; two unmapped-route theory inputs changed from the newly implemented manager URLs to deferred payment/medical-record routes. No test was removed or skipped. Historical Stage 1/2 reports describe the behavior at those earlier checkpoints.
+
+Stage 4 preserves all 191 cases and adds FinalReviewIntegrationTests: three long-fraction fee inputs that reproduced rounding before the fix, complete conflict-page selection recovery, specific Turkish validation without password echo/partial account creation, and role revocation with an already issued cookie/direct service call. Final restore/build/test/model consistency and Release/browser/restart results are in STAGE4_VERIFICATION.md. No UI snapshot or implementation-mirroring tests were added merely to increase the count.

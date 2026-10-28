@@ -66,7 +66,7 @@
             <div class="col-md-2"><button class="btn btn-primary" type="submit">Hizmet ata</button></div>
         </form>
     }
-    <div class="table-responsive mt-4"><table class="table align-middle"><caption>Hizmet atamaları</caption><thead><tr><th>Çalışan</th><th>Şube</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>
+    <div class="table-responsive mt-4" tabindex="0" role="region" aria-label="Hizmet atamaları; dar ekranda yatay kaydırabilirsiniz"><table class="table align-middle"><caption>Hizmet atamaları</caption><thead><tr><th scope="col">Çalışan</th><th scope="col">Şube</th><th scope="col">Hizmet</th><th scope="col">Durum</th><th scope="col">İşlem</th></tr></thead><tbody>
     @foreach (var offering in Model.Offerings)
     { <tr><td>@offering.Staff</td><td>@offering.Branch</td><td>@offering.Service</td><td>@(offering.Active ? "Etkin" : "Pasif")</td><td><form action="@root/offerings/@offering.Id/active" method="post" asp-antiforgery="true"><input name="active" value="@((!offering.Active).ToString().ToLowerInvariant())" type="hidden" /><button class="btn btn-outline-primary btn-sm" type="submit">@(offering.Active ? "Pasifleştir" : "Etkinleştir")</button></form></td></tr> }
     </tbody></table></div>

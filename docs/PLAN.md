@@ -1,6 +1,6 @@
 # Approved C# implementation plan
 
-Design approved by the owner. Stages 0–2 are accepted; **Stage 3 management/configuration is authorized and implemented**. Baseline: 26 October 2026 (Europe/Istanbul). Stage 4 remains unauthorized. No commit/push is authorized. Actual evidence is in STAGE3_VERIFICATION.md; earlier reports are historical.
+Design approved by the owner. Stages 0–3 are accepted; **Stage 4 review/delivery/presentation is authorized and implemented**, 27 October 2026 (Europe/Istanbul). The one authorized Stage 1–3 checkpoint is pushed and verified as abebdb2d0142ea883af83aa1475b385874d22e79. No additional commit/push is authorized. Actual final evidence is in STAGE4_VERIFICATION.md; earlier reports are historical.
 
 ## Grounded baseline
 
@@ -189,8 +189,8 @@ The Turkish management fee binder allows comma decimals and forbids implicit tho
 | 0 — accepted | Approved documents, active AGENTS.md, .gitignore, local Git, verified new account/remote and one authorized initial commit/push | Published commit 48d924fb90b8a5d549c46bec1491c1b9b301cc7e, 26 October 2026. |
 | 1 — accepted | Solution/DI, Identity, initial migrations, local Turkish layout, synthetic role accounts | Historical 57-test evidence in STAGE1_VERIFICATION.md, retained in Stage 2. |
 | 2 — accepted | Domain hierarchy, seeded catalog/shifts, booking/details/lists/approval/rejection, SQLite transaction adapter | Historical 113-test and separate-connection/process evidence in STAGE2_VERIFICATION.md, retained in Stage 3. |
-| 3 — implemented; checkpoint pending | Scoped facility/branch/department/service/staff/specialty/offering/hours/availability management | 191 passing tests, manager-created catalog → patient booking → new doctor approval → restart, and configuration races. STAGE3_VERIFICATION.md. Stop here; no commit/push. |
-| 4 — not authorized | Parity/security/OOP review, accessibility polish, restart/offline rehearsal and Turkish presentation guide | Requirement evidence, full build/test/publish and packaged demonstration; honest limitations. |
+| 3 — accepted | Scoped facility/branch/department/service/staff/specialty/offering/hours/availability management | Historical 191-test/new doctor/restart/configuration race evidence in STAGE3_VERIFICATION.md. Preserved in the verified GitHub checkpoint. |
+| 4 — implemented; checkpoint pending | Teacher/parity/security/OOP review, targeted UI/accessibility polish, published restart rehearsal and Turkish presentation/Windows delivery | 197 passing tests, model consistency, Release publish, 13-requirement audit, browser/keyboard proof and local delivery ZIPs. Stop here; no additional commit/push. |
 
 Stop at every stage checkpoint. Passing a stage does not authorize the next stage or further commits/pushes. Stage 2 delivers the first complete booking-and-approval workflow before manager CRUD.
 
@@ -198,7 +198,7 @@ Stop at every stage checkpoint. Passing a stage does not authorize the next stag
 
 Use [TEST_PARITY.md](TEST_PARITY.md) for per-scenario migration tracking. Domain tests use plain xUnit; application tests use controlled time and small doubles; integration tests use migrated SQLite files and WebApplicationFactory with actual Identity cookies/forms/antiforgery. Never use EF InMemory to prove SQLite behavior. Verify exact fee/timestamp mappings, subtype materialization, constraints, translations, object isolation and snapshots. Provider-specific Java assertions must be replaced, not copied blindly.
 
-Stage 2 booking concurrency evidence uses independent contexts/connections and separate Kestrel processes against one file, synchronized starts, committed invariants, actual busy/rollback and stale-tracker tests. Stage 3 adds ten configuration/booking race cases, busy configuration HTTP handling and atomic Identity/profile failure tests. Stage 4 adds final review/publish/presentation rehearsal when authorized. Report only executed commands and their limits; 191 current C# tests are separate from the historical 118 Java cases.
+Stage 2 booking concurrency evidence uses independent contexts/connections and separate Kestrel processes against one file, synchronized starts, committed invariants, actual busy/rollback and stale-tracker tests. Stage 3 adds ten configuration races and Identity/profile failure evidence. Stage 4 retains the full 191-case baseline and adds six meaningful HTTP cases: three overprecision fees, full conflict-selection recovery, credential-safe Turkish validation and existing-cookie role revocation. The final 197 C# tests are separate from the historical 118 Java executions. Release/browser/restart evidence is recorded, with independent second-machine and full screen-reader testing explicitly unclaimed.
 
 Demo mode is explicit and disabled elsewhere. Seed a one-branch clinic and two-branch hospital, doctor/non-doctor employees, 30/45/20-minute synthetic services, two patients and separate scoped managers. Initial dates start tomorrow and span fourteen days from TimeProvider. Use a stable seed marker independent of editable names; do not recreate or move saved reservations on restart. Document an explicit aged-demo reset/extension procedure.
 
@@ -221,6 +221,6 @@ The deadline is unconfirmed. These are relative actual workdays, possibly noncon
 | 9 | Turkish UI, security and regression review. |
 | 10 | Parity audit, packaged rehearsal and presentation evidence. |
 
-The single Stage 0 commit/push is complete. Stages 1–3 are explicitly uncommitted; further commits/pushes and stages require authorization. All work so far occurred on 26 October 2026, one actual development date. Never change dates to imply otherwise. The ten-day table is a possible future allocation of meaningful work, not a record of ten elapsed days. Verify SABIS/presentation dates, selection record and group obligations separately.
+The Stage 0 commit remains intact. The one authorized Stage 1–3 checkpoint was committed/pushed at the actual time, 27 October 2026, 09:54 +03:00. There are now two genuine commits on two actual dates (26/27 October); Stage 4 changes are local only. No further commit/push is authorized. The table above is a planning allocation, not evidence of ten elapsed development days. Future meaningful work must use real dates and explicit authorization. Verify SABIS/presentation dates, selection record and group obligations separately.
 
 Sources supporting technical decisions: [SQLite provider limitations](https://learn.microsoft.com/en-us/ef/core/providers/sqlite/limitations), [EF transactions](https://learn.microsoft.com/en-us/ef/core/saving/transactions), [xUnit package](https://www.nuget.org/packages/xunit.v3/3.2.2), and the official NuGet flat-container manifests checked during planning. This document describes approved intent; future verification records must distinguish implementation from proposal.

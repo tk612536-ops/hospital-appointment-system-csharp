@@ -1,6 +1,6 @@
 # Hospital/Clinic Appointment System — C# requirements
 
-Status: Stages 0–2 accepted; **Stage 3 hospital/clinic management is authorized and implemented**. Baseline: 26 October 2026, Europe/Istanbul. Actual results are in docs/STAGE3_VERIFICATION.md. Stage 4 remains unauthorized; no commit/push is authorized.
+Status: Stages 0–3 accepted; **Stage 4 final review and presentation preparation authorized and implemented**, 27 October 2026, Europe/Istanbul. The single authorized Stage 1–3 checkpoint was pushed as abebdb2d0142ea883af83aa1475b385874d22e79. Stage 4 changes remain local/uncommitted; no further commit/push is authorized. Actual final results are in docs/STAGE4_VERIFICATION.md.
 
 ## Sources and authority
 
@@ -59,7 +59,7 @@ R01: the teacher **recommends** at least three role groups in P25. PATIENT, STAF
 - U07: synthetic data only, professional accessible local UI, reproducible classroom demo and future initial demo dates.
 - U08: incremental stages with explicit approval at every checkpoint. Deliver core booking and approval before complete manager configuration.
 - U09: never modify, delete, overwrite or run write-producing operations in the Java reference directory.
-- U10: Stages 0–2 are accepted, including the genuine initial commit and the 113-test booking baseline. Stage 3 alone is authorized: scoped hospital/clinic/branch/department/service/staff/specialty/offering/hours/availability management, optional new staff Identity accounts, safe configuration changes, Turkish pages, and real SQLite configuration races. Preserve all 113 tests, transparently adapting obsolete stage-boundary assertions. **No commits or pushes are authorized.** Stop before Stage 4.
+- U10: Stages 0–3 are accepted, with 191 passing tests. On 27 October the owner authorized one genuine Stage 1–3 checkpoint commit/push, then Stage 4 only after verification: teacher/OOP/architecture/security audit, necessary fixes, Turkish UI/accessibility improvements, final tests/migration check/Release publish, Turkish presentation and Windows delivery instructions. All 191 cases are retained. The checkpoint succeeded. **No additional commit or push is authorized. Stop after Stage 4.**
 
 Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csharp.git`. Verify that the authenticated Git transport account is `tk612536-ops` before committing/pushing; the old account is not acceptable.
 
@@ -87,6 +87,6 @@ Payments, medical records/diagnosis, prescriptions, messaging, public registrati
 
 External questions remain: submission/presentation dates, SABIS format, selection status, group members and any further course instructions. They do not authorize invented dates or block Stage 0 documentation.
 
-See [approved implementation plan](docs/PLAN.md), [SQLite implementation](docs/CONCURRENCY.md), [test parity](docs/TEST_PARITY.md), [Stage 3 evidence](docs/STAGE3_VERIFICATION.md) and [agent instructions](AGENTS.md).
+See [approved implementation plan](docs/PLAN.md), [SQLite implementation](docs/CONCURRENCY.md), [test parity](docs/TEST_PARITY.md), [teacher audit](docs/REQUIREMENTS_AUDIT.md), [Stage 4 evidence](docs/STAGE4_VERIFICATION.md) and [agent instructions](AGENTS.md).
 
-Stages 1–3 implement T01–T13: the layered OOP system supports manager-created single/multi-branch hospitals and clinics, departments, exact service terms, both staff types, specialties, offerings, multiple weekly opening periods and dated availability. The newly configured catalog feeds patient booking and new staff approval. Application services enforce manager grants and child scope, use the same immediate-writer protocol, and protect future/ongoing Pending/Approved intervals on schedule edits. Service/staff/offering deactivation retains history and existing decision access. The 191-test suite and live restarted workflow provide evidence; final presentation, broader parity/accessibility review and submission obligations remain Stage 4 or external work.
+Stages 1–4 implement and audit T01–T13: manager-created single/multi-branch facilities, departments, exact service terms, both staff types, specialties, offerings, multiple opening periods and dated availability feed patient booking and staff approval. Services enforce grants/child scope and the unchanged immediate-writer protocol; schedule changes protect future/ongoing Pending/Approved intervals. Deactivation retains history/decisions. The 197-test suite, published restarted workflow, targeted browser/keyboard checks and new audit/presentation/delivery documents provide evidence. Administrative submission, attendance, contributor/selection status and ten genuine development days remain external obligations, not established by passing tests.

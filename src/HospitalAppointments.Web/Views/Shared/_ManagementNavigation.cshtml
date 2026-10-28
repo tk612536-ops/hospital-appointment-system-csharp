@@ -1,13 +1,14 @@
 @model ManagementPage
+@{ var section = ViewContext.RouteData.Values["controller"]?.ToString(); }
 <section class="page-intro pb-3">
     <p class="eyebrow">KURUM YÖNETİMİ</p><h1>@Model.Facility.Name</h1>
     <p>@(Model.Facility.Type == FacilityType.Hospital ? "Hastane" : "Klinik") · @Model.Branches.Count şube. Yalnızca yetkili olduğunuz kurumun kayıtları gösterilir.</p>
     <nav class="management-tabs" aria-label="Kurum yönetim menüsü">
         <a href="/manager/facilities">Kurumlarım</a>
-        <a href="/manager/facilities/@Model.Facility.Id">Şubeler ve bölümler</a>
-        <a href="/manager/facilities/@Model.Facility.Id/services">Hizmetler ve ücretler</a>
-        <a href="/manager/facilities/@Model.Facility.Id/staff">Çalışanlar ve atamalar</a>
-        <a href="/manager/facilities/@Model.Facility.Id/schedule">Saatler ve uygunluk</a>
+        <a href="/manager/facilities/@Model.Facility.Id" aria-current="@(section == "FacilityManagement" ? "page" : null)">Şubeler ve bölümler</a>
+        <a href="/manager/facilities/@Model.Facility.Id/services" aria-current="@(section == "CatalogManagement" ? "page" : null)">Hizmetler ve ücretler</a>
+        <a href="/manager/facilities/@Model.Facility.Id/staff" aria-current="@(section == "StaffManagement" ? "page" : null)">Çalışanlar ve atamalar</a>
+        <a href="/manager/facilities/@Model.Facility.Id/schedule" aria-current="@(section == "ScheduleManagement" ? "page" : null)">Saatler ve uygunluk</a>
     </nav>
 </section>
 @if (TempData["Message"] is string message) { <div class="alert alert-success" role="status">@message</div> }
