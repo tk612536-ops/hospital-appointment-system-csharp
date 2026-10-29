@@ -2,6 +2,8 @@
 
 Status: Stages 1–4 verified, final review on **27 October 2026**. **197 C# tests passed (31 domain, 26 application, 140 integration), zero failures/skips.** All 191 accepted Stage 1–3 cases remain unchanged in Stage 4; six new meaningful HTTP cases cover the final review. Every historical execution row below has an implemented equivalent/adaptation/provider replacement. This is not a claim that 118 unchanged Java tests ran in C#, that counts are interchangeable, or that finite tests prove every possible deployment correct.
 
+**Day 4 update, 29 October 2026:** the full suite now passes **200 cases (31 domain, 26 application, 143 integration)**, zero failures/skips. TRX name comparison confirms all 197 Stage 4 cases remain. `AppointmentRollbackTests.BookingFailureAfterInsertRollsBackAndReleasesBothPatientAndEmployee` and `DecisionFailureAfterUpdateRestoresPendingAuditAndReservation` (Approved/Rejected) extend the earlier low-level disposal test by executing the actual application service, saving real SQLite changes, faulting immediately before commit and checking persisted rollback/cleanup/fresh retry. No production or schema change was necessary. The historical Java mapping/counts below are unchanged; see [DAY4_VERIFICATION.md](DAY4_VERIFICATION.md).
+
 ## Reference evidence and honest baseline
 
 Read-only source: `C:\Users\muhammed\Desktop\hospital-appointment-system\src\test\java\com\example\clinic`. Existing reports: that project's `target/surefire-reports/TEST-*.xml`. The Java verification guide records 118 tests with zero failures/errors/skips. Stage 0 read the reports; it did not rerun Java tests or write in the reference project.
