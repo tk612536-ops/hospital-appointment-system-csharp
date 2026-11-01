@@ -19,7 +19,7 @@ Microsoft references: [framework-dependent publishing](https://learn.microsoft.c
 
 ## Option A — source checkout or source ZIP
 
-The GitHub Stage 1–3 checkpoint is [abebdb2](https://github.com/tk612536-ops/hospital-appointment-system-csharp/commit/abebdb2d0142ea883af83aa1475b385874d22e79). Current Stage 4 changes have intentionally **not** been pushed. Use the local Stage 4 source ZIP for the final reviewed version until another push is explicitly authorized. A private GitHub repository requires the owner's permitted access; no token is included in an archive.
+The reviewed Stage 4 source was published as [22f326c](https://github.com/tk612536-ops/hospital-appointment-system-csharp/commit/22f326ca741d2c964774511cb806a072b3416b1e); subsequent quality checkpoints are on `main`. Clone the current `main` for the latest committed tests and documentation. The old Stage 4 source/Release ZIPs are dated artifacts and are not automatically refreshed by later commits. A private GitHub repository requires the owner's permitted access; no token is included in an archive.
 
 Extract the source archive or clone the repository into a new local folder. Open PowerShell **in the folder containing HospitalAppointments.sln**, then run:
 
@@ -49,6 +49,14 @@ The folder is the content root; its default database is **release/data/clinic.db
 ```powershell
 dotnet .\HospitalAppointments.Web.dll --environment Demo --Database:Path C:\ClinicDemo\data\clinic.db
 ```
+
+When launching from a different working directory (for example, a shortcut or another PowerShell folder), also specify the extracted Release folder as the content root:
+
+```powershell
+dotnet 'C:\ClinicDemo\release\HospitalAppointments.Web.dll' --contentRoot 'C:\ClinicDemo\release' --environment Demo --Database:Path data/clinic.db
+```
+
+Replace the example folder with your actual extraction path. The content root supplies appsettings and local static assets; a relative database path resolves under that root, so this example uses **C:\ClinicDemo\release\data\clinic.db** regardless of the launcher folder. Keep the same content root/database on restart. This launch mode is exercised by `PublishedInstallationTests`; it does not require copying a source database.
 
 Use the same path on restart. The archive contains **no database or certificate**, so the target gets its own fresh synthetic data. Install/trust the local certificate as above. The default appsettings files contain safe settings, not private credentials. This is a localhost classroom demonstration; it is not an internet deployment recipe.
 
@@ -121,4 +129,4 @@ Local source/Release ZIPs and SHA256SUMS are under ignored `artifacts`. Test res
 
 Single timezone/currency, same-day periods and 15-minute starts are deliberate. No overnight/holiday calendar, travel/room scheduling, payments, medical records, public signup/recovery/grant editor or automatic Pending expiry/cancellation/rescheduling is included. Safe concurrent configuration edits use the last valid state; unsaved manager form input is not automatically restored. Historical service/staff names and terms are snapshots; institution/branch/professional labels are current links.
 
-For the university: confirm individual/maximum-two-person group, project selection/extension status, SABIS deadline and required format. Upload and verify the receipt before presentation; attendance is separate. The assignment requires at least ten commits on different real development days. Inspect the actual `main` history with `git log --format="%h %cI %s"`; an archive's creation date does not establish development-day history. Never fabricate dates. The current owner authorization covers one Day 5 checkpoint only; additional development/publication needs authorization. Do not represent the ignored source/Release archives as submitted to SABIS or refreshed automatically by a source commit.
+For the university: confirm individual/maximum-two-person group, project selection/extension status, SABIS deadline and required format. Upload and verify the receipt before presentation; attendance is separate. The assignment requires at least ten commits on different real development days. Inspect the actual `main` history with `git log --format="%h %cI %s"`; an archive's creation date does not establish development-day history. Never fabricate dates. The current owner authorization covers one Day 6 checkpoint only; additional development/publication needs authorization. Do not represent the ignored source/Release archives as submitted to SABIS or refreshed automatically by a source commit.

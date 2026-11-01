@@ -8,6 +8,8 @@ Status: Stages 1–4 verified, final review on **27 October 2026**. **197 C# tes
 
 ## Reference evidence and honest baseline
 
+**Day 6 update, 1 November 2026:** **203 cases pass (31 domain, 26 application, 146 integration)**, zero failures/skips; all 202 Day 5 case names remain. `PublishedInstallationTests.PublishedReleaseInitializesItsOwnDatabaseAndPreservesChangesAcrossProcessRestart` publishes the actual Release app, starts it from another directory with an explicit content root and absent isolated database, verifies migrations/seeds/assets, books and approves through HTTP, then restarts a separate process and checks changed credentials and unchanged saved rows/seed counts. Earlier automated separate-process coverage used a source build and a database already initialized by WebApplicationFactory. The new test requires the SDK and publishes without restoring into ignored TestResults; it does not replace any existing test or change the Java parity mappings. See [DAY6_VERIFICATION.md](DAY6_VERIFICATION.md).
+
 Read-only source: `C:\Users\muhammed\Desktop\hospital-appointment-system\src\test\java\com\example\clinic`. Existing reports: that project's `target/surefire-reports/TEST-*.xml`. The Java verification guide records 118 tests with zero failures/errors/skips. Stage 0 read the reports; it did not rerun Java tests or write in the reference project.
 
 | Java suite | Historical executed cases | Main C# destination |
