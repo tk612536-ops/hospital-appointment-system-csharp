@@ -8,7 +8,7 @@ The Stage 1–3 checkpoint is [abebdb2](https://github.com/tk612536-ops/hospital
 
 ## Run on Windows
 
-From `C:\Users\muhammed\Desktop\hospital-appointment-system-csharp`, with .NET SDK 10.0.403 installed:
+From the extracted or cloned folder that contains `HospitalAppointments.sln`, with .NET SDK 10.0.403 or a compatible patch installed:
 
 ```powershell
 dotnet tool restore
@@ -47,7 +47,7 @@ These credentials are intentionally public and work only when demo identities ex
 | clinicstaff | Single-branch clinic employee | KlinikDemo10! |
 | clinicmanager | Manager granted only the separate clinic | KlinikDemo10! |
 
-The password is stored as an Identity hash, never plaintext. Five incorrect password attempts lock an account for five minutes. Login trims surrounding whitespace and accepts case-insensitive ASCII usernames. The demonstration banner appears only when both the environment is `Demo` and `Demo:Enabled` is true.
+The public demo password is a seed constant. Identity stores password hashes in SQLite. Five incorrect password attempts lock an account for five minutes. Login trims surrounding whitespace and accepts case-insensitive ASCII usernames. The demonstration banner appears only when both the environment is `Demo` and `Demo:Enabled` is true.
 
 Seeding is idempotent: existing accounts, hashes, passwords, enabled states and roles are not reset. Stage 2 fixtures use a stable `booking-v1` database marker independent of editable facility names. They create a two-branch Demo Bakım Hastanesi, one-branch Demo Klinik, doctor/laboratory offerings, manager grants, two patients and fourteen initial future dates beginning tomorrow. Restarts never move or duplicate appointments or shifts. `Demo:SeedBookings=false` enables foundation-only demonstration accounts without booking fixtures (used by the preserved Stage 1 tests).
 
@@ -83,7 +83,7 @@ Booking selection is keyboard-friendly and explicit: after changing a parent ins
 2. Open **Hizmetler ve ücretler**. Create a 30-minute service at `775,50` TRY. Turkish fee fields use a comma and no thousands separators; dot/grouped/scientific input and fractions below one kuruş are rejected rather than silently rounded or regrouped.
 3. Open **Çalışanlar ve atamalar**. Add a specialty, register a synthetic doctor, and optionally specify a new username and a strong password (8–128 characters, upper/lowercase, digit, symbol). Both credential fields may instead remain empty. A new account receives STAFF only; an existing account cannot be attached/taken over. Register healthcare workers with a job title through the neighboring form.
 4. Assign the doctor to the service. That offering also assigns the branch; repeat with other services/branches as appropriate. Specialty alone does not authorize a service.
-5. Open **Saatler ve uygunluk**. Select the branch and weekday of a future date; set `09:00–12:00` and `13:00–17:00`, leaving the other pairs blank. Save. Blank pairs are ignored; all pairs blank closes that weekday. Then add that doctor's availability on the chosen future date, `09:00–12:00`.
+5. Open **Saatler ve uygunluk**. Select the branch and weekday of a future date, then press **Saatleri göster** to load that day. Set `09:00–12:00` and `13:00–17:00`, leaving the other pairs blank. Save. Blank pairs are ignored; all pairs blank closes that weekday. Then add that doctor's availability on the chosen future date, `09:00–12:00`.
 6. Sign in as `patient`, select the new facility/service/doctor/date and reserve a free 30-minute start. Sign in with the newly created doctor credentials and approve. Return as the patient and verify **Onaylandı**.
 7. As manager, try shortening the covering shift so it ends halfway through that appointment, or removing it. The localized error returns HTTP 409 and the persisted interval stays unchanged. Compatible edits work. Opening-hour reductions also preserve future unbooked shifts.
 8. Edit the service duration/price, or deactivate the service, employee or offering. Existing booked terms/history and authorized decisions remain. Deactivation blocks new bookings. Reactivation requires the relevant staff/service to be active. Resource links cannot be moved to another department/branch/facility.
@@ -113,17 +113,16 @@ The default file is `src/HospitalAppointments.Web/data/clinic.db`, resolved from
 
 The local app migrates before accepting requests, then initializes roles and enabled demo fixtures. SQLite check-constraint changes require EF table rebuilds; the ExactMinorUnits migration emitted a non-transactional-PRAGMA warning and completed successfully. Migration atomicity is separate from the tested booking transaction guarantee. Use a backup before future changes to a database you need to retain. Tests apply the same migrations on isolated files under ignored TestResults/integration, never EF InMemory or the Java database.
 
-For explicit migration commands, run from the solution root:
+Startup applies the migrations automatically. To compare the EF model to its migration snapshot, run from the solution root:
 
 ```powershell
-dotnet ef database update --project src/HospitalAppointments.Infrastructure --startup-project src/HospitalAppointments.Web
 dotnet ef migrations has-pending-model-changes --project src/HospitalAppointments.Infrastructure --startup-project src/HospitalAppointments.Web
 ```
 
-The design-time factory uses the default local database and never seeds users. For a fresh demo, stop the app first and deliberately remove only its synthetic `clinic.db`, `clinic.db-wal` and `clinic.db-shm` files, then restart. This destroys that demo database; it is not an automatic startup/reset operation. Do not touch the Java reference.
+The model check compares code to the snapshot without migrating a database. The design-time factory never seeds users. For a fresh demo, stop the app first and deliberately remove only its synthetic `clinic.db`, `clinic.db-wal` and `clinic.db-shm` files, then restart. This destroys that demo database; it is not an automatic startup/reset operation. Do not touch the Java reference.
 
-## Verification and stage boundaries
+## Submission and verification
 
-See [Stage 4 verification](docs/STAGE4_VERIFICATION.md) for restore/build/**197-test** results, migration consistency, Release publish, browser/keyboard checks and the published workflow/restart. Stage 1/2/3 reports remain historical. [Test parity](docs/TEST_PARITY.md) maps all 118 historical Java execution rows to actual C# equivalents/adaptations; Java tests were not rerun and the counts are not interchangeable.
+Use **HospitalAppointments-submission-source.zip** for SABİS if the course accepts a source ZIP. The [Windows delivery checklist](docs/RUN_ON_WINDOWS.md#course-delivery-checklist) identifies the package, setup steps and course obligations. The deadline supplied by the owner is **15 November 2026 at 23:59 Türkiye time**. Presentations begin **17 November 2026** with individually assigned times. Attendance is mandatory.
 
-[Requirements](REQUIREMENTS.md), [plan](docs/PLAN.md), [booking concurrency](docs/CONCURRENCY.md) and [agent instructions](AGENTS.md) describe the approved implementation. Their dated verification/status notes preserve the state at those checkpoints; the 28 October authorization supersedes the former instruction to leave Stage 4 uncommitted. Local archives under ignored `artifacts` retain the 27 October rehearsal snapshot and hashes; they are not SABIS uploads. This publication adds one genuine Stage 4 checkpoint to the existing 26/27 October commits, without backdating. The ten-day history requirement and SABIS deadline/receipt, selection status, contributors and presentation attendance remain owner/course obligations. **No further development or commit/push is authorized.**
+The [teacher audit](docs/REQUIREMENTS_AUDIT.md) maps all 13 application requirements to code and tests. The [Stage 4 report](docs/STAGE4_VERIFICATION.md) records the historical browser/keyboard checks and published workflow. [Test parity](docs/TEST_PARITY.md) maps the 118 historical Java execution rows to C# cases or provider-specific replacements. See [requirements](REQUIREMENTS.md), [architecture](docs/ARCHITECTURE_REVIEW.md), [plan](docs/PLAN.md) and [SQLite concurrency](docs/CONCURRENCY.md) for the design.

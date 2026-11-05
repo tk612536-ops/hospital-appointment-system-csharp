@@ -1,6 +1,6 @@
 # Hospital/Clinic Appointment System — C# requirements
 
-Status: Stages 0–3 accepted; **Stage 4 final review and presentation preparation authorized and implemented**, 27 October 2026, Europe/Istanbul. The single authorized Stage 1–3 checkpoint was pushed as abebdb2d0142ea883af83aa1475b385874d22e79. Stage 4 changes remain local/uncommitted; no further commit/push is authorized. Actual final results are in docs/STAGE4_VERIFICATION.md.
+Status as of 5 November 2026. Stages 0–4 are complete. The [teacher audit](docs/REQUIREMENTS_AUDIT.md) maps the implemented T01–T13 requirements to code and tests. See the [course delivery checklist](docs/RUN_ON_WINDOWS.md#course-delivery-checklist) for the final source package and submission steps.
 
 ## Sources and authority
 
@@ -14,7 +14,7 @@ Classification: **T** = written teacher requirement; **R** = teacher recommendat
 
 ## Mandatory application requirements
 
-| ID | Written requirement and source | Planned C# acceptance evidence |
+| ID | Written requirement and source | C# acceptance evidence |
 | --- | --- | --- |
 | T01 | OOP Hospital/Clinic Appointment System; Option A, P4 | Runnable ASP.NET Core MVC application and explainable domain model. |
 | T02 | Support one site and organizations with multiple branches; P4 | Functional one-branch clinic and two-branch hospital, using one model. |
@@ -30,7 +30,7 @@ Classification: **T** = written teacher requirement; **R** = teacher recommendat
 | T12 | Save procedure, duration, fee, employee and date/time; P22 | Persist/reload details and immutable booked snapshots. |
 | T13 | Appointment approval mechanism; P23 | Assigned staff or scoped manager approves/rejects pending bookings, with decision audit. |
 
-The table defines acceptance targets. Stage 3 coverage is summarized below. General examination, radiology and laboratory are examples in the source, not a prescribed exhaustive catalog.
+The table defines the accepted application scope. General examination, radiology and laboratory are examples in the source, not a prescribed exhaustive catalog.
 
 ## Delivery and presentation obligations
 
@@ -39,8 +39,8 @@ The table defines acceptance targets. Stage 3 coverage is summarized below. Gene
 | T14 | Individual or group of at most two; P10/P40 | Actual contributors/group status must be confirmed by the owner. |
 | T15 | Share through GitHub and upload to SABIS; P41/P43 | Separate C# repository designated below. SABIS submission remains a human/course obligation. |
 | T16 | Minimum ten GitHub commits made on different days; P42 | Owner requires meaningful commits across at least ten actual development days. No backdating or fabricated history. |
-| T17 | SABIS upload before final deadline; P43 | Exact deadline and upload format are not confirmed. |
-| T18 | Each student presents and attends for project points; P44/P45/P49 | Prepare Turkish presentation notes; attendance is not established by software tests. |
+| T17 | SABİS upload before final deadline; P43 | Owner-supplied deadline: **15 November 2026, 23:59 Türkiye time**. Verify the upload receipt and any course-specific file rules. |
+| T18 | Each student presents and attends for project points; P44/P45/P49 | Owner reports presentations begin **17 November 2026**. Check the individually assigned slot and attend. |
 | T19 | Files must be uploaded before presentation participation; P50 | Confirm submission receipt with the course. |
 | T20 | Record project selection by 13 October 2026; P46/P47 | Date has passed; selection/extension status is unknown. Do not assume compliance. |
 
@@ -59,7 +59,7 @@ R01: the teacher **recommends** at least three role groups in P25. PATIENT, STAF
 - U07: synthetic data only, professional accessible local UI, reproducible classroom demo and future initial demo dates.
 - U08: incremental stages with explicit approval at every checkpoint. Deliver core booking and approval before complete manager configuration.
 - U09: never modify, delete, overwrite or run write-producing operations in the Java reference directory.
-- U10: Stages 0–3 are accepted, with 191 passing tests. On 27 October the owner authorized one genuine Stage 1–3 checkpoint commit/push, then Stage 4 only after verification: teacher/OOP/architecture/security audit, necessary fixes, Turkish UI/accessibility improvements, final tests/migration check/Release publish, Turkish presentation and Windows delivery instructions. All 191 cases are retained. The checkpoint succeeded. **No additional commit or push is authorized. Stop after Stage 4.**
+- U10: Stages 0–4 were implemented and accepted in checkpoints. Later work is limited to the explicitly authorized checkpoint scope. Preserve genuine Git history and keep local artifacts and private data out of version control.
 
 Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csharp.git`. Verify that the authenticated Git transport account is `tk612536-ops` before committing/pushing; the old account is not acceptable.
 
@@ -85,8 +85,8 @@ Target remote: `https://github.com/tk612536-ops/hospital-appointment-system-csha
 
 Payments, medical records/diagnosis, prescriptions, messaging, public registration, rooms/equipment scheduling, travel buffers, holiday/overnight calendars, multiple timezones/currencies and cloud deployment are outside initial scope. No Java database or credential migration is planned; create fresh synthetic C# data.
 
-External questions remain: submission/presentation dates, SABIS format, selection status, group members and any further course instructions. They do not authorize invented dates or block Stage 0 documentation.
+External questions remain about any course-specific upload format, project selection record, group status and individually assigned presentation slot.
 
 See [approved implementation plan](docs/PLAN.md), [SQLite implementation](docs/CONCURRENCY.md), [test parity](docs/TEST_PARITY.md), [teacher audit](docs/REQUIREMENTS_AUDIT.md), [Stage 4 evidence](docs/STAGE4_VERIFICATION.md) and [agent instructions](AGENTS.md).
 
-Stages 1–4 implement and audit T01–T13: manager-created single/multi-branch facilities, departments, exact service terms, both staff types, specialties, offerings, multiple opening periods and dated availability feed patient booking and staff approval. Services enforce grants/child scope and the unchanged immediate-writer protocol; schedule changes protect future/ongoing Pending/Approved intervals. Deactivation retains history/decisions. The 197-test suite, published restarted workflow, targeted browser/keyboard checks and new audit/presentation/delivery documents provide evidence. Administrative submission, attendance, contributor/selection status and ten genuine development days remain external obligations, not established by passing tests.
+Stages 1–4 implement T01–T13. The [Day 9 verification](docs/DAY9_VERIFICATION.md) records the 207-test baseline, isolated booking and approval rehearsal, unsafe-edit rejection and restart persistence. Administrative evidence comes from the actual GitHub history, SABİS receipt and course records.

@@ -19,7 +19,7 @@ Microsoft references: [framework-dependent publishing](https://learn.microsoft.c
 
 ## Option A — source checkout or source ZIP
 
-The reviewed Stage 4 source was published as [22f326c](https://github.com/tk612536-ops/hospital-appointment-system-csharp/commit/22f326ca741d2c964774511cb806a072b3416b1e); subsequent quality checkpoints are on `main`. Clone the current `main` for the latest committed tests and documentation. The old Stage 4 source/Release ZIPs are dated artifacts and are not automatically refreshed by later commits. A private GitHub repository requires the owner's permitted access; no token is included in an archive.
+Use the final `HospitalAppointments-submission-source.zip` or clone the C# repository's [`main` branch](https://github.com/tk612536-ops/hospital-appointment-system-csharp/tree/main). A private repository requires access for the reviewer. The source ZIP can be extracted and built without a GitHub login.
 
 Extract the source archive or clone the repository into a new local folder. Open PowerShell **in the folder containing HospitalAppointments.sln**, then run:
 
@@ -36,15 +36,22 @@ Startup applies the included migrations, creates required Identity roles, and se
 
 Open [https://localhost:7143](https://localhost:7143). HTTP 5143 redirects to HTTPS; authentication and antiforgery require the HTTPS URL. Stop with Ctrl+C before rebuilding, moving, backing up or resetting the application. A running host can lock DLLs on Windows.
 
-## Option B — prepared Release ZIP
+## Option B — framework-dependent Release folder
 
-Extract `HospitalAppointments-stage4-release.zip`. Its `release` folder contains the app, appsettings files, local static assets and dependencies. Change into **release**, then start it:
+From the extracted source root, use the SDK to restore and publish the Release folder:
+
+```powershell
+dotnet restore HospitalAppointments.sln --locked-mode
+dotnet publish src/HospitalAppointments.Web -c Release --no-restore --self-contained false -o artifacts/release
+```
+
+Copy the complete published folder when transferring it to a target Windows computer. In PowerShell, change into that folder and start the app:
 
 ```powershell
 dotnet .\HospitalAppointments.Web.dll --environment Demo
 ```
 
-The folder is the content root; its default database is **release/data/clinic.db**. A source-build database is not automatically shared. For an explicit database location, use an absolute path in a writable local directory:
+The folder is the content root. Its default database is **release/data/clinic.db**. A source-build database is not automatically shared. For an explicit database location, use an absolute path in a writable local directory:
 
 ```powershell
 dotnet .\HospitalAppointments.Web.dll --environment Demo --Database:Path C:\ClinicDemo\data\clinic.db
@@ -58,15 +65,7 @@ dotnet 'C:\ClinicDemo\release\HospitalAppointments.Web.dll' --contentRoot 'C:\Cl
 
 Replace the example folder with your actual extraction path. The content root supplies appsettings and local static assets; a relative database path resolves under that root, so this example uses **C:\ClinicDemo\release\data\clinic.db** regardless of the launcher folder. Keep the same content root/database on restart. This launch mode is exercised by `PublishedInstallationTests`; it does not require copying a source database.
 
-Use the same path on restart. The archive contains **no database or certificate**, so the target gets its own fresh synthetic data. Install/trust the local certificate as above. The default appsettings files contain safe settings, not private credentials. This is a localhost classroom demonstration; it is not an internet deployment recipe.
-
-To recreate the published files from source:
-
-```powershell
-dotnet publish src/HospitalAppointments.Web -c Release --no-restore --self-contained false -o artifacts/release
-```
-
-Keep all of that output when copying. This command is the framework-dependent publish mode exercised on Windows; no self-contained runtime, installer, IIS deployment or different hardware execution is claimed.
+Use the same path on restart. A freshly published folder gets its own SQLite database on first start. Keep that database and any local HTTPS certificate out of transfers. Install and trust the certificate on the target as above. The default settings target a localhost classroom demonstration.
 
 ## Synthetic credentials
 
@@ -123,10 +122,15 @@ For a publish folder, change the database variable to that folder's actual `data
 | Login fails | Use the correct demo database/environment, avoid lockout, and remember startup never replaces stored passwords. |
 | Empty Production database | Expected: no public signup/initial manager provisioning screen. Use explicit Demo for class rehearsal, not real patient data. |
 
-## Delivery status and limitations
-
-Local source/Release ZIPs and SHA256SUMS are under ignored `artifacts`. Test results, databases, certificates, secrets, build output, IDE state and .git are excluded from the source delivery ZIP; the Release ZIP intentionally contains compiled app output and local assets. Review the manifest/hash when transferring. Stage 4 verification was executed on this Windows computer using the published folder and a separate SQLite file, **not** on an independent second computer.
+## Limitations
 
 Single timezone/currency, same-day periods and 15-minute starts are deliberate. No overnight/holiday calendar, travel/room scheduling, payments, medical records, public signup/recovery/grant editor or automatic Pending expiry/cancellation/rescheduling is included. Safe concurrent configuration edits use the last valid state; unsaved manager form input is not automatically restored. Historical service/staff names and terms are snapshots; institution/branch/professional labels are current links.
 
-For the university: confirm individual/maximum-two-person group, project selection/extension status, SABIS deadline and required format. Upload and verify the receipt before presentation; attendance is separate. The assignment requires at least ten commits on different real development days. Inspect the actual `main` history with `git log --format="%h %cI %s"`; an archive's creation date does not establish development-day history. Never fabricate dates. The current owner authorization covers one Day 6 checkpoint only; additional development/publication needs authorization. Do not represent the ignored source/Release archives as submitted to SABIS or refreshed automatically by a source commit.
+## Course delivery checklist
+
+1. **Use `artifacts/HospitalAppointments-submission-source.zip`** from the project folder if SABİS accepts a source ZIP. The teacher's assignment requires a SABİS upload but specifies no archive format or filename. Follow any additional course instructions about the required file type and naming. The old Stage 4 archives are historical snapshots.
+2. Extract the ZIP and open the folder containing `HospitalAppointments.sln`. It contains the four C# projects, three test projects, seven dependency lock files, the EF tool manifest and migration sources, local Bootstrap assets/license and project documentation. The synthetic demo login constants are included so a fresh install can seed the classroom accounts.
+3. Share the [C# repository](https://github.com/tk612536-ops/hospital-appointment-system-csharp) and ensure the professor can access it. The assignment requires at least ten commits on different days. Check the actual `main` history with `git log --format="%h %cI %s"`.
+4. Upload before **15 November 2026 at 23:59 Türkiye time** and verify the SABİS receipt. This deadline and the **17 November 2026** presentation start are the schedule supplied by the owner. Check the separately assigned date/time and attend. The assignment requires both upload and attendance. Confirm the selection record and individual/maximum-two-person group with the course.
+
+The source ZIP can be used to build a Release folder locally. See [the isolated published-installation evidence](DAY6_VERIFICATION.md) and [Turkish rehearsal guide](PRESENTATION_GUIDE_TR.md) for the tested run modes. The Windows verification used isolated folders on the development computer.

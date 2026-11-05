@@ -257,7 +257,7 @@ Hazır demo doktoruyla hızlı yedek: `manager` → **Kurum yönetimi → Demo B
 | Onay formu tekrar gönderilirse? | Sadece Pending karar alabilir. Eski formun tekrar veya zıt kararı 409 ile reddedilir; ilk karar veren kişi, zaman ve sürüm korunur. Day 7 testleri bu HTTP akışını doğrular. |
 | SQLite seçmek çok kullanıcıya yeter mi? | Bu yerel ders uygulamasında kısa yazma işlemlerini sıraya almak anlaşılır bir doğruluk çözümüdür. WAL birden çok yazan sağlamaz. Üretim hastanesi kapasitesi için yük testi/işletim tasarımı gerekir; bu ölçekte bir iddiamız yok. |
 | 207 test neyi gösteriyor? | 4 Kasım'da 31 Domain, 26 Application ve 150 Integration testi geçti; önceki 207 test korundu. Bugün doküman/prova iyileştirildiği için sırf sayı artsın diye test eklenmedi. Tarihsel 118 Java çalıştırması C# test sonucu değildir. |
-| Proje teslimi tamamen tamam mı? | Güncel C# kaynakları GitHub'dadır. SABIS yükleme makbuzu, son tarih, katılım ve en az on gerçek farklı gündeki commit şartı ayrıca doğrulanır. Sayıyı/tarihleri `git log --format="%h %cI %s"` ile gösterin; geçmiş tarihli rapordaki iki commit bilgisini bugünün durumu diye sunmayın. |
+| Teslim ve sunum için ne kaldı? | [Teslim kontrol listesini](RUN_ON_WINDOWS.md#course-delivery-checklist) izleyin. GitHub `main` üzerinde farklı günlerdeki commit geçmişini gösterin. SABİS yükleme kaydını ve size atanan sunum saatini ayrıca kontrol edin. |
 
 ## 11. Sunumdan önce
 
@@ -265,8 +265,8 @@ Hazır demo doktoruyla hızlı yedek: `manager` → **Kurum yönetimi → Demo B
 - Yerel Bootstrap dosyalarının, gelecekteki tarihin ve boş saatin hazır olduğunu kontrol edin. İlk restore internet gerektirir; hazırlanmış uygulama CDN kullanmaz.
 - Güncel prova ve test sonuçlarını `docs/DAY9_VERIFICATION.md`, geçmiş Stage 4 sonuçlarını kendi tarihli raporu üzerinden anlatın. Diyagramı görüntüleyebilen bir Markdown önizlemesi ve bölüm 4'teki kaynak dosyalarını önceden açın.
 - Kaynak dosyalarını ve rehberi erişilebilir tutun. İstenirse Domain hiyerarşisini, AppointmentService'i ve SqliteWriteTransaction'ı doğrudan açın.
-- Eski Stage 4 ZIP'leri sonraki commit'lerle kendiliğinden güncellenmez. GitHub `main` kaynağıyla sunumda çalıştırdığınız klasörü karıştırmayın. Aktif veritabanını kaynak teslimine koymayın.
-- SABIS son tarihi/formatı, seçim kaydı, grup ve katılımı hocanın duyurusundan doğrulayın. Tarih veya commit geçmişi üretmeyin.
+- Kaynak ZIP kabul ediliyorsa SABİS için **HospitalAppointments-submission-source.zip** dosyasını kullanın. Gösterimi temiz bir klasöre çıkardığınız kaynakla veya bu kaynaktan aldığınız Release çıktısıyla prova edin.
+- Bildirilen son tarih **15 Kasım 2026, saat 23.59 (Türkiye saati)**. Yükleme kaydını kontrol edin. Sunumlar **17 Kasım 2026** tarihinde başlar. Size atanan gün ve saati öğrenin ve sunuma katılın.
 
 ## 12. Sunum aksarsa hızlı kontrol
 

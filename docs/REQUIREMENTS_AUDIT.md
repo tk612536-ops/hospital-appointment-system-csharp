@@ -1,6 +1,6 @@
 # Teacher requirements audit — C# implementation
 
-Audited on **27 October 2026**, after the Stage 1–3 checkpoint. This audit re-read the original `C:\Users\muhammed\Desktop\hospital-appointment-system\docs\ProjeOdevi_Son.docx` using read-only Word XML extraction. Main-body paragraph locators P1–P50 include blank paragraphs. SHA-256 remains `E636C9E18DC27A995A69E7C59800C3CB7506FB17EDC0884F5D563D6F67593226`. No Java build/application/tests were run or reference files changed.
+Application audit completed on **27 October 2026**. The original assignment and delivery obligations were rechecked on **5 November 2026**. This audit re-read the original `C:\Users\muhammed\Desktop\hospital-appointment-system\docs\ProjeOdevi_Son.docx` using read-only Word XML extraction. Main-body paragraph locators P1–P50 include blank paragraphs. SHA-256 remains `E636C9E18DC27A995A69E7C59800C3CB7506FB17EDC0884F5D563D6F67593226`. No Java build/application/tests were run or reference files changed.
 
 The written assignment permits any platform at P4. **The professor's later C# instruction, relayed by the owner, governs this submission.** This is a C#/.NET application, not a Java submission. T01–T13 below are the approved requirements inventory derived from the source paragraphs, not a claim that the DOCX itself numbers thirteen bullets.
 
@@ -31,10 +31,10 @@ P25 recommends at least three role groups. PATIENT, STAFF and MANAGER are implem
 | Source | Status / owner action |
 | --- | --- |
 | P10/P40 — Individual or at most two contributors | Actual group/contributor declaration remains for the owner to confirm. |
-| P41/P43 — GitHub and SABIS | GitHub checkpoint **abebdb2d0142ea883af83aa1475b385874d22e79** was pushed and its complete 164-file tree verified. Stage 4 changes are local only under the current no-more-push instruction. SABIS upload/receipt is not established. |
-| P42 — At least ten commits on different days | **Not yet satisfied:** two genuine commits on 26 and 27 October 2026. No backdating or extra commits were made. Continue meaningful work on actual later days only with authorization; clarify course timing with the professor. |
-| P43 — Upload before deadline | Exact deadline/format is unconfirmed. Use the course announcement and verify the SABIS receipt. |
-| P44/P45/P49 — Present and attend | Turkish guide and rehearsal prepared; attendance and delivery remain human obligations. |
+| P41/P43 — GitHub and SABİS | Share the [C# repository](https://github.com/tk612536-ops/hospital-appointment-system-csharp) and confirm reviewer access. See the [delivery checklist](RUN_ON_WINDOWS.md#course-delivery-checklist) for the source ZIP. Upload and receipt remain owner actions. |
+| P42 — At least ten commits on different days | Verify the count and dates against `main` on GitHub. The source ZIP omits Git history. |
+| P43 — Upload before deadline | Owner-supplied deadline: **15 November 2026 at 23:59 Türkiye time**. The DOCX does not specify an archive format. Follow any additional course file instructions and verify the receipt. |
+| P44/P45/P49 — Present and attend | Owner reports presentations begin **17 November 2026**. Check the individual date/time and attend. The assignment states absence forfeits the project points. |
 | P50 — Upload before participating | Verify submission receipt before presenting. |
 | P46/P47 — Selection recorded by 13 October 2026 | The date precedes this audit. Selection/extension status remains unknown; no compliance or late permission is assumed. |
 
